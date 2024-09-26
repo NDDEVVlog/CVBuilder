@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './Home.css';
 import axios from 'axios';
 
 const Home = () => {
   const [responseData, setResponseData] = useState(null);
+  const navigate = useNavigate(); // Get the navigate function
 
   const handleOnClick = () => {
     axios.get('http://localhost:3001/getTestData')
@@ -16,9 +18,14 @@ const Home = () => {
       });
   }
 
+  const handleNavigateToMyResumes = () => {
+    navigate('/MyResumes'); // Navigate to /MyResumes route
+  }
+
   return (
     <div className='homeContainer'>
-      <button className='buttonTest' onClick={handleOnClick}> Get data </button>
+      <button className='buttonTest' onClick={handleOnClick}>Get data</button>
+      <button className='buttonNavigate' onClick={handleNavigateToMyResumes}>Go to My Resumes</button> {/* New Navigation Button */}
       
       {/* Display data if available */}
       {responseData && (
