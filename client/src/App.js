@@ -1,9 +1,9 @@
 import './App.css';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Home from 'pages/Home';
-import Profile from 'pages/Profile'
-import NavBar from 'components/Navbar';
+import Profile from 'pages/Profile/Profile';
 import MyResumes from 'pages/MyResumes/MyResumes';
+import NavBar from 'components/Navbar';
 
 function App() {
   return (
