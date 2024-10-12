@@ -3,7 +3,8 @@ import bcrypt from 'bcrypt'
 
 
 // Hàm đăng ký người dùng
-export const registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {   
+    console.log("Register");
     const { username, password, firstName, lastName } = req.body;
 
     // Kiểm tra nếu username, password, firstName hoặc lastName không có trong yêu cầu

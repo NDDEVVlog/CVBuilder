@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
+
 :root{
     --bg-color: #fff;
     --fonts-color: #E8E8FC;
@@ -6,8 +7,9 @@
     --third-color: #7573CF;
     --fourth-color: #000;  
 }
+
 *{
-    font-family:'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -24,11 +26,12 @@ body {
 .register-box {
     padding-top: 10px;
 }
+
 .form-register {
     max-width: 450px;
     max-height: 700px;
     padding: 1rem;
-    align-content:center;
+    align-content: center;
     position: relative;
     z-index: 2;
     display: flex;
@@ -41,59 +44,39 @@ body {
     margin-left: 750px;
     margin-top: 90px;
     box-shadow: 8px 8px 8px 3px rgba(117, 115, 207, 0.6);
-
 }
 
 .box-logo {
     margin-top: 10px;
 }
 
-.form-register .form-floating:focus-within {
-    z-index: 2;
-}
-
-
-.form-register input[type="text"] {
-    color: #000;
-    border-color: #000;
-    background-color: #fff;
-    border-radius: 25px;
-    margin-top: 15px;
-    max-width: 350px;
-    box-shadow: none;
-    border: 2px solid;
-    padding: 5px 151px 5px 151px; /* You can adjust this for more/less padding */
-    text-align: center;
-    outline: 0.5
-    
-}
-
-
-
-.form-register input[type="email"] {
-    color: #000;
-    border-color: #000;
-    background-color: #fff;
-    border-radius: 25px;
-    max-width: 350px;
-    box-shadow: none;
-    border: 2px solid;
-    padding: 5px 151px 5px 151px; /* You can adjust this for more/less padding */ /* Align the text to the left */
-    text-indent: 0; /* Ensure no additional indentation */
-    margin-top: 15px;
-}
+.form-register input[type="text"],
+.form-register input[type="email"],
 .form-register input[type="password"] {
-    color: #000;
+    color: #7573CF;
     border-color: #000;
     background-color: #fff;
     border-radius: 25px;
+    margin-top: 15px;
     max-width: 350px;
     box-shadow: none;
-    border: 2px solid;
-    padding: 5px 151px 5px 151px; /* You can adjust this for more/less padding */
-    text-align: left; /* Align the text to the left */
-    text-indent: 0; /* Ensure no additional indentation */
-    margin-top: 15px;
+    border: 2px solid #000;
+    padding: 10px 20px;
+    text-align: left; /* Align the text properly */
+    font-size: 16px;
+    outline: none;
+}
+
+/* Adjust placeholder color */
+.form-register input::placeholder {
+    color: #7573CF !important;
+    font-weight: 700;
+}
+
+/* Ensure text input stays aligned */
+.form-register input:focus {
+    outline: none;
+    border-color: var(--third-color);
 }
 
 .form-floating label {
@@ -101,30 +84,35 @@ body {
     padding-left: 20px !important;
 }
 
-
-
 .btn {
     background-color: #7573CF;
     color: #fff !important;
     margin-top: 20px;
+    padding: 10px 30px;
+    border-radius: 25px;
+    border: 2px solid transparent;
+    transition: background-color 0.3s ease;
 }
+
 .btn:hover {
-    background-color: var(--fonts-color);
-    color:var(--second-color);
+    background-color: var(--second-color);
+    color: #fff;
 }
-div b {
-    color: #000;
+
+.alert {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 8px;
 }
-div p {
-    color: #7573CF;
-    padding-bottom: 15px;
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
 }
-div span {
-    color: #7573CF;
-    font-weight: 500;
-}
-.h3 {
-    color: var(--fonts-color);
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
 }
 
 .login-register {
@@ -133,9 +121,10 @@ div span {
     color: #7573CF;
     text-decoration: none;
     font-weight: 500;
-    padding-top: 20px;
-    margin: auto;
+    text-align: center;
+    text-align: center;
     font-size: 17px;
+    margin-left: 62px;
 }
 
 .button-register {
@@ -150,18 +139,15 @@ div span {
     overflow: hidden;
     transition: all 0.5s ease-in-out;
     margin-top: 40px;
-    margin-left: 100px;
-    align-items: center;
-    justify-content: center;
-    justify-items: center;
-    align-content: center;
-  }
-  
-  .button-register:hover {
+    text-align: center;
+    margin-left: 84px;
+}
+
+.button-register:hover {
     box-shadow: .5px .5px 150px #7573CF;
-  }
-  
-  .type2::after {
+}
+
+.type2::after {
     content: "Let's goooo!";
     height: 50px;
     width: 150px;
@@ -177,12 +163,10 @@ div span {
     display: flex;
     align-items: center;
     justify-content: center;
-    justify-items: center;
-    align-content: center;
     transition: all 0.5s ease-in-out;
-  }
-  
-  .type2::before {
+}
+
+.type2::before {
     content: "Register";
     height: 50px;
     width: 150px;
@@ -198,12 +182,12 @@ div span {
     align-items: center;
     justify-content: center;
     transition: all 0.5s ease-in-out;
-  }
-  
-  .type2:hover::after {
+}
+
+.type2:hover::after {
     transform: translateY(0) scale(1.2);
-  }
-  
-  .type2:hover::before {
+}
+
+.type2:hover::before {
     transform: translateY(-50px) scale(0) rotate(120deg);
-  }
+}
