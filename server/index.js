@@ -9,6 +9,8 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getData } from "./controllers/getTestData.js";
+import userRoutes from './routes/userRoutes.js';
+
 
 // Configuration
 const __filename = fileURLToPath(import.meta.url);
@@ -24,6 +26,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, 'public/assets')));
 
+
 // File Storage Configuration
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -35,8 +38,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Routes
-app.get('/getTestData', getData);
+
 
 // MongoDB Connection Setup
 const PORT = process.env.PORT || 6001;
@@ -46,3 +48,25 @@ mongoose.connect(process.env.MONGO_URL, {
 }).then(() => {
     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 }).catch(error => console.log(`${error} did not connect`));
+
+
+
+let storedProfileData = {}; // Declare a global variable to store profile data
+
+//const { getData } = require('./controllers/dataController');
+
+//app.get('/getTestData', getData); // This will serve the stored profile data
+
+app.post('/api/profile', (req, res) => {
+    storedProfileData = req.body;
+    console.log('Received profile data:', storedProfileData);
+  
+     // Send a success response
+    res.status(200).json({
+        message: 'Profile data received successfully',
+        profileData: storedProfileData // Send the profile data back in the response
+    });
+  });
+
+  app.use('/api/users', userRoutes);
+

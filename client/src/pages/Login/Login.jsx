@@ -6,22 +6,50 @@ import './Login.css';
 export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(''); // Ensure this line is present
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
     console.log('Email:', email);
     console.log('Password:', password);
-  };
+
+    try {
+        const response = await fetch('http://localhost:3001/api/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: email, password }), // Ensure you send the correct field names
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Login failed'); // Use the server's error message
+        }
+
+        const data = await response.json();
+        console.log('Login successful:', data);
+        // Handle successful login here (e.g., redirect, store token, etc.)
+        setError(''); // Clear error on successful login
+    } catch (err) {
+        console.error('Error:', err);
+        setError(err.message); // Set error message
+    }
+};
+
 
   return (
+
     <div style={{ backgroundColor: '#E8E8FC', minHeight: '100vh' }}> {/* Set background color to black */}
 
       <meta charSet="utf-8"/>
+
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>CV Maker | Login</title>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossOrigin="anonymous" />
       <link rel="icon" href="logo.png" color='#000'/>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+
       <link rel="stylesheet" type="text/css" href="Login.css" /> 
 
       <nav className="navbar bg-body-tertiary">
@@ -61,6 +89,7 @@ export const Login = () => {
               <a href="Register" className="register">Register</a>
             </div>
           </div>       
+
         </div>
         <div className="footer">
           <p>@This website is produced by: Nguyễn Duy, Danh Huy, Phúc Nguyên</p>
@@ -68,7 +97,6 @@ export const Login = () => {
       </div>
     </div>
   );
-}
-
+};
 
 export default Login;
