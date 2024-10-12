@@ -5,20 +5,19 @@ import './Profile.css';
 
 function Profile() {
   return (
-    <div>
+    <div style={{ backgroundColor: '#E8E8FC', minHeight: '100vh' }}>
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>My Resumes</title>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossOrigin="anonymous" />
       <link rel="icon" href="logo.png" />
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
-      <link rel="stylesheet" type="text/css" href="profile.css" />
-      <video src="background.mp4" preload autoPlay loop muted />
+      <link rel="stylesheet" type="text/css" href="Profile.css" />
       <nav className="navbar">
         <div className="container">
           <a className="navbar-brand" href="#">
             <img src="/Pictures/logo.png" alt="Logo" height={24} className="d-inline-block align-text-top" />
-            <b>CV</b> Online Builder
+            <b> CV</b><span>Online Builder</span>
           </a>
           <div className='btns'>
             <button className="btn btn-sm btn-dark"><i className="bi bi-person-circle" /> My Profile</button>
@@ -37,20 +36,24 @@ function Profile() {
           <div>
             <form className="row g-3 p-3">
               <div className="form col-md-6">
-                <label className="form-label">Full Name</label>
+                <label className="form-label">First Name</label>
+                <input type="text" placeholder="Tran" className="form-control" />
+              </div>
+              <div className="form col-md-6">
+                <label className="form-label">Last Name</label>
                 <input type="text" placeholder="Dev Ninja" className="form-control" />
               </div>
               <div className="form col-md-6">
                 <label className="form-label">Email</label>
                 <input type="email" placeholder="dev@abc.com" className="form-control" />
               </div>
-              <div className="form col-12">
-                <label className="form-label">Home Address</label>
-                <input type="text" placeholder="766 Võ Văn Kiệt, Phường 1, Quận 5, Hồ Chí Minh" className="form-control" />
-              </div>
               <div className="form col-md-6">
                 <label className="form-label">Date Of Birth</label>
                 <input type="date" placeholder="DD/MM/YYYY" className="form-control" />
+              </div>
+              <div className="form col-12">
+                <label className="form-label">Home Address</label>
+                <input type="text" placeholder="766 Võ Văn Kiệt, Phường 1, Quận 5, Hồ Chí Minh" className="form-control" />
               </div>
               <div className="form col-md-6">
                 <label className="form-label">Country</label>
@@ -62,7 +65,14 @@ function Profile() {
               </div>
               <div className="form col-md-6">
                 <label className="form-label">Sex</label>
-                <input type="text" placeholder="Male/ Female/ Others" className="form-control" />
+                <select name="lang" id="lang-select">
+               
+                    <option value="">-------- Choose your sex --------</option>
+                    <option value="csharp">Male</option>
+                    <option value="cpp">Female</option>
+                    <option value="php">Others</option>
+                    <option value="ruby">Don't ask me !</option>
+                </select>
               </div>
               <div className="col-12 text-end">
               <button class="animated-button text-end">
