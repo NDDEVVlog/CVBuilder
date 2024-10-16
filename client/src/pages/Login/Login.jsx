@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Login.css';
@@ -7,6 +8,7 @@ export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -19,7 +21,7 @@ export const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: email, password }), // Ensure you send the correct field names
+        body: JSON.stringify({ username: email, password }),
       });
 
       if (!response.ok) {
@@ -30,10 +32,13 @@ export const Login = () => {
       const data = await response.json();
       console.log('Login successful:', data);
       setError(''); // Clear error on successful login
-      // Handle successful login here (e.g., redirect, store token, etc.)
+
+      // Navigate to the profile page
+      navigate('/profile'); // Change this path to your actual profile route
+
     } catch (err) {
       console.error('Error:', err);
-      setError(err.message); // Set error message
+      setError(err.message);
     }
   };
 
@@ -84,8 +89,8 @@ export const Login = () => {
                   id="floatingEmail"
                   placeholder=""
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)} // Controlled input
-                  required // Optional: add required attribute for better UX
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
                 <label className="Log" htmlFor="floatingEmail">
                   <i className="bi bi-envelope" /> Email address
@@ -99,17 +104,17 @@ export const Login = () => {
                   id="floatingPassword"
                   placeholder=""
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)} // Controlled input
-                  required // Optional: add required attribute for better UX
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
                 <label className="Pass" htmlFor="floatingPassword">
                   <i className="bi bi-key" /> Password
                 </label>
               </div>
 
-              {error && <div className="alert alert-danger">{error}</div>} {/* Display error message */}
+              {error && <div className="alert alert-danger">{error}</div>}
 
-              <button type="submit" className="button type1">Login</button> {/* Change class to className */}
+              <button type="submit" className="button type1">Login</button>
             </form>
 
             <div className="forgot-regis d-flex justify-content-between my-3">
