@@ -84,7 +84,7 @@ const Profile = () => {
               height={24}
               className="d-inline-block align-text-top"
             />
-            <b>CV</b> Online Builder
+            <b>CV</b> <span>Online Builder</span>
 
           </a>
           <div className="btns">

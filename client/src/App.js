@@ -7,6 +7,7 @@ import Register from 'pages/Register/Register';
 
 import Profile from 'pages/Profile/Profile';
 import MyResumes from 'pages/MyResumes/MyResumes';
+import CreateResume from 'pages/CreateResume/CreateResume';
 import NavBar from 'components/Navbar';
 import Login from 'pages/Login/Login';
 import SignUp from 'pages/Signup';
@@ -24,7 +25,9 @@ function App() {
           <Route path='/Register' element={<Register/>}/>
 
           <Route path='/signup' element={<SignUp/>}/>
-          <Route path='/login' element={<Login/>}/>
+          <Route path='/Login' element={<Login/>}/>
+
+          <Route path='/CreateResume' element={<CreateResume/>}/>
 
         </Routes>
       </BrowserRouter>

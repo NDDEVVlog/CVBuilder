@@ -18,6 +18,12 @@
     scroll-behavior: smooth;
 }
 
+
+.navbar-brand span {
+  color: #7573CF;
+  font-weight: 500;
+}
+
 nav {
     backdrop-filter: blur(50px);
     max-width: 100%;
@@ -37,7 +43,7 @@ nav span {
 }
 
 .container .profile {
-    margin-top: 150px;
+    margin-top: 100px;
     backdrop-filter: blur(50px);
     background-color: #fff;
 }

@@ -1,0 +1,183 @@
+.avatar-container {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 200px;
+  }
+
+  .avatar-container span {
+    position: absolute;
+    margin-top: -70px;
+    margin-left: -130px;
+    color: #7573CF;
+    font-weight: 500;
+  }
+  
+  .avatar-placeholder {
+    font-size: 100px;
+    color: #7573CF;
+    margin-left: 15px;
+
+  }
+
+.navbar .container {
+  padding-bottom: -150px;
+  padding-top: 0px;
+  max-height: 5vh;
+}
+  
+  .avatar-img {
+    width: 160px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    -moz-border-radius:50%;
+    -webkit-border-radius: 50%;
+  }
+
+  .container i, a {
+    color: #7573CF;
+  }
+  
+  input[type="file"] {
+    margin-top: 10px;
+    width: 100%;
+    margin-left: 280px;
+  }
+
+.avatar-container .form-control {
+    padding-right: 500px;
+    color: #7573CF;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="email"] {
+    color: #000 !important;
+    border-color: #000 !important;
+    background-color: #fff;
+    border: 2px solid;
+    box-shadow: none;
+}
+
+select {
+  color: #000 !important;
+  border-color: #000 !important;
+  background-color: #fff;
+  border-radius: 8px !important;
+  box-shadow: none;
+  border: 2px solid !important;
+  padding: 5px 151px 5px 151px; /* You can adjust this for more/less padding */
+  text-align: left; /* Align the text to the left */
+  text-indent: 0; /* Ensure no additional indentation */
+}
+
+.exp {
+  color: #000 !important;
+  border-color: #000 !important;
+  background-color: #fff;
+  border-radius: 8px !important;
+  box-shadow: none;
+  border: 2px solid !important;
+  padding: 5px 151px 5px 151px; /* You can adjust this for more/less padding */
+  text-align: left; /* Align the text to the left */
+  text-indent: 0; /* Ensure no additional indentation */
+}
+
+.exp button {
+  margin-bottom: 10px;
+}
+
+textarea {
+  color: #000 !important;
+  border-color: #000 !important;
+  background-color: #fff;
+  border-radius: 8px !important;
+  box-shadow: none;
+  border: 2px solid !important;
+  padding: 5px 151px 5px 151px; /* You can adjust this for more/less padding */
+  text-align: left; /* Align the text to the left */
+  text-indent: 0; /* Ensure no additional indentation */
+}
+
+h6 {
+
+  color: #7573CF;
+  font-weight: 600;
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.button2 {
+  height: 50px;
+  width: 150px;
+  border: none;
+  border-radius: 25px;
+  border-color: #7573CF !important;
+  border: 2px solid;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s ease-in-out;
+  margin-top: 20px;
+  margin-left: 80px;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
+}
+
+.button:hover {
+  box-shadow: .5px .5px 150px #7573CF;
+}
+
+.type2::after {
+  content: "Let's goooo!";
+  height: 50px;
+  width: 150px;
+  background-color: #7573CF;
+  border-color: #7573CF;
+  color: #fff;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  transform: translateY(50px);
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
+  transition: all 0.5s ease-in-out;
+}
+
+.type2::before {
+  content: "Save Profile";
+  height: 50px;
+  width: 150px;
+  background-color: #fff;
+  color: #7573CF;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  transform: translateY(0px) scale(1.2);
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s ease-in-out;
+}
+
+.type2:hover::after {
+  transform: translateY(0) scale(1.2);
+}
+
+.type2:hover::before {
+  transform: translateY(-50px) scale(0) rotate(120deg);
+}
