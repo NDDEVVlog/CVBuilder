@@ -308,7 +308,7 @@ const MyResumes = () => {
             </div>
 
             <div className="text-center">
-                <button type="submit" className="button type2">Save Profile</button>
+                <button type="submit" className="button2 type2">Save Profile</button>
             </div>
           </form>
         </div>
