@@ -77,7 +77,7 @@ const Profile = () => {
       {/* <video src="background.mp4" preload autoPlay loop muted /> */}
       <nav className="navbar">
         <div className="container">
-          <a className="navbar-brand" href="#">
+          <a className="navbar-brand" href="Home">
             <img
               src="/Pictures/logo.png"
               alt="Logo"
@@ -88,12 +88,16 @@ const Profile = () => {
 
           </a>
           <div className="btns">
+            <a href='CreateResume'>
             <button className="btn btn-sm btn-dark" >
-              <i className="bi bi-person-circle" /> My Profile
+              <i className="bi bi-person-circle" /> Create Profile
             </button>
+            </a>
+            <a href='Login'>
             <button className="btn btn-sm btn-danger">
               <i className="bi bi-box-arrow-left" /> Logout
             </button>
+            </a>
           </div>
         </div>
       </nav>

@@ -118,8 +118,8 @@ export const Login = () => {
             </form>
 
             <div className="forgot-regis d-flex justify-content-between my-3">
-              <a href="forgot-password.html" className="forgot-pass">
-                Forgot Password ?
+              <a href="Home" className="forgot-pass">
+                About us?
               </a>
               <a href="Register" className="register">
                 Register

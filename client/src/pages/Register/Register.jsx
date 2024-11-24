@@ -69,13 +69,13 @@ const Register = () => {
         <div>
             <nav className="navbar">
                 <div className="container">
-                    <a className="navbar-brand" href="#">
+                    <a className="navbar-brand" href="Home">
                         <img src="/Pictures/logo.png" alt="Logo" height={24} className="d-inline-block align-text-top" />
                         <b> CV</b><span>Online Builder</span>
                     </a>
                     <div className='btns'>
-                        <button className="btn btn-sm btn-dark"><i className="bi bi-person-circle" /> My Profile</button>
-                        <button className="btn btn-sm btn-danger"><i className="bi bi-box-arrow-left" /> Logout</button>
+                        <a href="Profile"><button className="btn btn-sm btn-dark"><i className="bi bi-person-circle" /> My Profile</button></a>
+                        <a href="Login"><button className="btn btn-sm btn-danger"><i className="bi bi-box-arrow-left" /> Logout</button></a>
                     </div>
                 </div>
             </nav>
