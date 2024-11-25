@@ -2,29 +2,41 @@ import User from '../models/User.js';
 import bcrypt from 'bcrypt'
 
 
+// [GET] Get user's id
+export const getUser = async (req,res) => {
+    const {id} = req.query
+    const user = await User.findById(id)
+
+    if(!user) {
+        return res.status(404).json({message: 'User not found!'})
+    }
+
+    return res.status(200).json(user)
+}
+
 // Hàm đăng ký người dùng
 export const registerUser = async (req, res) => {   
     console.log("Register");
-    const { username, password, firstName, lastName } = req.body;
+    const { password, firstName, lastName,email } = req.body;
 
     // Kiểm tra nếu username, password, firstName hoặc lastName không có trong yêu cầu
-    if (!username || !password || !firstName || !lastName) {
+    if ( !password || !firstName || !lastName ||!email) {
         return res.status(400).json({ message: 'Username, Password, First Name và Last Name là bắt buộc.' });
     }
 
     try {
         // Kiểm tra xem username đã tồn tại hay chưa
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'Username đã tồn tại.' });
         }
 
         // Tạo một user mới
         const newUser = new User({
-            username,
             password,
-            firstName,
-            lastName
+            firstName,  
+            lastName,
+            email
         });
 
         // Lưu user vào MongoDB
@@ -38,6 +50,7 @@ export const registerUser = async (req, res) => {
     }
 };
 
+
 export const login = async (req, res) => {
     const { username, password } = req.body;
     // console.log(password)
@@ -49,7 +62,7 @@ export const login = async (req, res) => {
 
     try {
         // Kiểm tra xem người dùng có tồn tại không
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ email: username });
         if (!user) {
             return res.status(400).json({ message: 'Tên đăng nhập hoặc mật khẩu không hợp lệ' });
         }

@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Login.css';
+import { UserContext } from 'LoginContext/UserContext';
+import { setUserId } from 'LoginContext/actions';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate(); // Initialize useNavigate
+
+  const {dispatch} = useContext(UserContext)
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -31,7 +35,10 @@ export const Login = () => {
 
       const data = await response.json();
       console.log('Login successful:', data);
+
       setError(''); // Clear error on successful login
+      dispatch(setUserId(data._id))
+
 
       // Navigate to the profile page
       navigate('/profile'); // Change this path to your actual profile route

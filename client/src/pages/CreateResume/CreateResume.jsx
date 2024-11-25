@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './CreateResume.css';
+import axios from 'axios'
+import { UserContext } from 'LoginContext/UserContext';
+
 
 const MyResumes = () => {
+
+  const {state} = useContext(UserContext)
+  const [user, setUser] = useState()
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -16,10 +23,58 @@ const MyResumes = () => {
     hobbies: '',
     languagesKnown: '',
     address: '',
-    experiences: [{ }],
-    education: [{  }],
-    skills: [''],
+    experiences: [{ title: "", company: "", startDate: "", endDate: "" }],
+    education: [{ degree: "", institution: "", year: "" }],
+    skills: [{ name: "", level: "" }],
+    socialLink: [{ Platform: "", URL: "" }],
+    avatar: null,
   });
+
+  useEffect(() => {
+    if (!state.userId) {
+      console.error('User ID is missing in the context state!');
+      return;
+    }
+
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/profile/getProfile', {
+          params: { id: state.userId },
+        });
+
+        if (response.data ) {
+          
+          console.log(response.data)
+          setFormData({
+            fullName: response.data.fullName || '',
+            email: response.data.email || '',
+            address: response.data.address || '',
+            dob: response.data.dob || '',
+            country: response.data.country || '',
+            phone: response.data.phoneNumber || '',
+            sex: response.data.sex || '',
+            experiences: response.data.workExperience || [{ title: "", company: "", startDate: "", endDate: "" }],
+            education: response.data.education || [{ degree: "", institution: "", year: "" }],
+            skills: response.data.skills || [{ name: '', level: '' }],
+            socialLink: response.data.socialLink || [{ platform: '', url: '' }],
+            avatar: response.data.avatar || null,
+          });
+        } else {
+          console.log('Profile not found for user ID:', state.userId);
+        }
+      } catch (err) {
+        console.error('Error fetching user data:', err);
+      }
+    };
+
+    fetchProfile();
+  }, [state.userId]);
+
+
+  console.log(user)
+  console.log(formData)
+
+  
 
   useEffect(() => {
     document.title = 'My Resumes';
@@ -36,7 +91,7 @@ const MyResumes = () => {
   const handleAddExperience = () => {
     setFormData({
       ...formData,
-      experiences: [...formData.experiences, { title: '', company: '', start: '', end: '', description: '' }],
+      experiences: [...formData.experiences, { title: '', company: '',location:' ' ,start: '', end: '', description: '' }],
     });
   };
 
@@ -47,12 +102,21 @@ const MyResumes = () => {
     });
   };
 
-  const handleAddSkill = () => {
-    setFormData({
-      ...formData,
-      skills: [...formData.skills, ''],
-    });
-  };
+  // Add a new skill (to the end of the array)
+const handleAddSkill = () => {
+  setFormData((prevData) => ({
+    ...prevData,
+    skills: [...prevData.skills, { name: "", level: "" }]
+  }));
+};
+
+const handleAddSocialLink = () => {
+  setFormData(prevData => ({
+    ...prevData,
+    socialLink: [...prevData.socialLink, { Platform: "", URL: "" }]
+  }));
+};
+
 
   const handleExperienceChange = (e, index) => {
     const { name, value } = e.target;
@@ -72,12 +136,31 @@ const MyResumes = () => {
     }));
   };
 
-  const handleSkillChange = (e, index) => {
-    const updatedSkills = formData.skills.map((skill, i) => (i === index ? e.target.value : skill));
-    setFormData((prevData) => ({
-      ...prevData,
-      skills: updatedSkills,
-    }));
+  const handleSkillChange = (e, index, field) => {
+    const { value } = e.target;
+    
+    // Update skill value, ensuring that skill.level is a number.
+    if (field === 'level') {
+      setFormData((prevData) => {
+        const updatedSkills = [...prevData.skills];
+        updatedSkills[index] = { ...updatedSkills[index], level: Number(value) }; // Ensuring it's a number
+        return { ...prevData, skills: updatedSkills };
+      });
+    } else {
+      setFormData((prevData) => {
+        const updatedSkills = [...prevData.skills];
+        updatedSkills[index] = { ...updatedSkills[index], [field]: value }; // Updating other fields
+        return { ...prevData, skills: updatedSkills };
+      });
+    }
+  };
+  const handleSocialLinkChange = (e, index, field) => {
+    const value = e.target.value;
+    setFormData(prevData => {
+      const updatedLinks = [...prevData.socialLink];
+      updatedLinks[index][field] = value;
+      return { ...prevData, socialLink: updatedLinks };
+    });
   };
 
   const handleRemoveExperience = (index) => {
@@ -94,12 +177,30 @@ const MyResumes = () => {
     }));
   };
 
-  const handleRemoveSkill = (index) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      skills: prevData.skills.filter((_, i) => i !== index),
-    }));
-  };
+  // Remove a skill
+const handleRemoveSkill = (index) => {
+  setFormData((prevData) => ({
+    ...prevData,
+    skills: prevData.skills.filter((_, i) => i !== index)
+  }));
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault(); // Prevent the form from refreshing the page
+  // Log the formData to the console
+  console.log(formData);
+  // Alert the formData (convert to JSON string for better readability)
+  alert(JSON.stringify(formData, null, 2));
+};
+
+
+const handleRemoveSocialLink = (index) => {
+  setFormData((prevData) => ({
+    ...prevData,
+    socialLink: prevData.socialLink.filter((_, i) => i !== index), // Fix the typo
+  }));
+};
+
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -113,6 +214,9 @@ const MyResumes = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  const formattedDob = formData.dob ? formData.dob.split('T')[0] : '';
+
   return (
     <div>
       <nav className="navbar bg-body-tertiary shadow" id='nav-create'>
@@ -161,19 +265,25 @@ const MyResumes = () => {
 
             <div className="col-md-6">
               <label className="form-label">Full Name</label>
-              <input type="text" name="fullName" value={formData.fullName} onChange={handleInputChange} placeholder="Dev Ninja" className="form-control" />
+              <input type="text" name="fullName" value={formData.fullName || ''} onChange={handleInputChange} placeholder="Dev Ninja" className="form-control" />
             </div>
             <div className="col-md-6">
               <label className="form-label">Email</label>
-              <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="dev@abc.com" className="form-control" />
+              <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="dev@abc.com" className="form-control" readOnly />
             </div>
             <div className="col-md-6">
               <label className="form-label">Mobile No</label>
-              <input type="number" name="mobileNo" value={formData.mobileNo} onChange={handleInputChange} placeholder="9569569569" className="form-control" />
+              <input type="number" name="mobileNo" value={formData.mobileNo} onChange={handleInputChange} placeholder="" className="form-control" />
             </div>
             <div className="col-md-6">
               <label className="form-label">Date Of Birth</label>
-              <input type="date" name="dob" value={formData.dob} onChange={handleInputChange} className="form-control" />
+              <input
+                type="date"
+                name="dob"
+                value={formattedDob} // Use formatted date here
+                onChange={handleInputChange}
+                className="form-control"
+              />
             </div>
 
             <div className="col-md-6">
@@ -248,8 +358,8 @@ const MyResumes = () => {
                     <input type="text" className="form-control mt-1" name="title" value={exp.title} onChange={(e) => handleExperienceChange(e, index)} placeholder="Company Name" />
                     <input type="text" className="form-control mt-1" name="company" value={exp.company} onChange={(e) => handleExperienceChange(e, index)} placeholder="Location" />
                     <div className="d-flex justify-content-between mt-1">
-                      <input type="text" className="form-control me-1" name="start" value={exp.start} onChange={(e) => handleExperienceChange(e, index)} placeholder="Start Date" />
-                      <input type="text" className="form-control" name="end" value={exp.end} onChange={(e) => handleExperienceChange(e, index)} placeholder="End Date" />
+                      <input type="date" className="form-control me-1" name="start" value={formData.dob} onChange={(e) => handleExperienceChange(e, index)} placeholder="Start Date" />
+                      <input type="date" className="form-control" name="end" value={exp.end} onChange={(e) => handleExperienceChange(e, index)} placeholder="End Date" />
                     </div>
                     <textarea className="form-control mt-1" name="description" value={exp.description} onChange={(e) => handleExperienceChange(e, index)} rows="3" placeholder="Job Description"></textarea>
                   </div>
@@ -287,28 +397,89 @@ const MyResumes = () => {
             <div className="d-flex justify-content-between">
               <h5 className="text-secondary"><i className="bi bi-star"></i> Skills</h5>
               <div>
-                <button type="button" onClick={handleAddSkill} className="text-decoration-none"><i className="bi bi-file-earmark-plus"></i> Add New</button>
+                <button type="button" onClick={handleAddSkill} className="text-decoration-none">
+                  <i className="bi bi-file-earmark-plus"></i> Add New
+                </button>
               </div>
             </div>
 
             <div className="d-flex flex-wrap">
-              {formData.skills.map((skill, index) => (
+              {formData.skills && formData.skills.length > 0 && formData.skills.map((skill, index) => (
                 <div className="col-12 col-md-6 p-2" key={index}>
                   <div className="exp p-2 border rounded">
                     <div className="d-flex justify-content-between align-items-center">
-                      <h6><i className="bi bi-caret-right"></i> {skill || 'Your Skill'}</h6>
+                      <h6>
+                        <i className="bi bi-caret-right"></i> {skill.name || 'Your Skill'}
+                      </h6>
                       <button type="button" onClick={() => handleRemoveSkill(index)} className="btn btn-link p-0">
                         <i className="bi bi-x-lg small"></i>
                       </button>
                     </div>
-                    <input type="text" className="form-control mt-1" value={skill} onChange={(e) => handleSkillChange(e, index)} placeholder="Skill" />
+                    <input
+                      type="text"
+                      className="form-control mt-1"
+                      value={skill.name}
+                      onChange={(e) => handleSkillChange(e, index, 'name')}
+                      placeholder="Skill"
+                    />
+                    {/* Slider for Skill Proficiency */}
+                    <div className="d-flex align-items-center mt-2">
+                      <label htmlFor={`skill-slider-${index}`} className="me-2">Proficiency:</label>
+                      <input
+                        type="range"
+                        id={`skill-slider-${index}`}
+                        className="form-range"
+                        min="0"
+                        max="100"
+                        value={skill.level}
+                        onChange={(e) => handleSkillChange(e, index, 'level')}
+                      />
+                      <span className="ms-2">{skill.level}%</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <hr />
+            <div className="d-flex justify-content-between">
+              <h5 className="text-secondary"><i className="bi bi-star"></i> Social Links</h5>
+              <div>
+                <button type="button" onClick={handleAddSocialLink} className="text-decoration-none"><i className="bi bi-file-earmark-plus"></i> Add New</button>
+              </div>
+            </div>
+
+            <div className="d-flex flex-wrap">
+              {formData.socialLink && formData.socialLink.length > 0 && formData.socialLink.map((socialLink, index) => (
+                <div className="col-12 col-md-6 p-2" key={index}>
+                  <div className="exp p-2 border rounded">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <h6><i className="bi bi-caret-right"></i> {socialLink.Platform || 'Your Link'}</h6>
+                      <button type="button" onClick={() => handleRemoveSocialLink(index)} className="btn btn-link p-0">
+                        <i className="bi bi-x-lg small"></i>
+                      </button>
+                    </div>
+                    <input 
+                      type="text" 
+                      className="form-control mt-1" 
+                      value={socialLink.Platform} 
+                      onChange={(e) => handleSocialLinkChange(e, index,'Platform')} 
+                      placeholder="Platform" 
+                    />
+                    <input 
+                      type="text" 
+                      className="form-control mt-1" 
+                      value={socialLink.URL} 
+                      onChange={(e) => handleSocialLinkChange(e, index,'URL')} 
+                      placeholder="URL" 
+                    />
                   </div>
                 </div>
               ))}
             </div>
 
             <div className="text-center">
-                <button type="submit" className="button type2">Save Profile</button>
+                <button type="submit" onClick={handleSubmit} className="button type2">Save Profile</button>
             </div>
           </form>
         </div>

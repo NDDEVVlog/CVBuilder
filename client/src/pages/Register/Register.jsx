@@ -16,7 +16,7 @@ const Register = () => {
 
     // Validate form data
     const validateForm = () => {
-      if (firstName.trim() === '' || lastName.trim() === '' || username.trim() === '' || password.trim() === '') {
+      if (firstName.trim() === '' || lastName.trim() === '' || password.trim() === ''|| email.trim()==='') {
           setError('Please fill in all fields.');
           return false;
       }
@@ -48,7 +48,7 @@ const Register = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ firstName, lastName, username, password }),
+                    body: JSON.stringify({ firstName, lastName, password,email }),
                 });
 
                 const data = await response.json();
@@ -121,8 +121,8 @@ const Register = () => {
                             className="form-control form-control-register"
                             id="floatingEmail"
                             placeholder=""
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <label htmlFor="floatingEmail"><i className="bi bi-envelope"></i> Email address</label>
                     </div>
