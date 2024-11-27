@@ -1,5 +1,5 @@
 import express from 'express';
-import { create, getProfile } from '../controllers/profileController.js';
+import { create, getProfile,updateProfile } from '../controllers/profileController.js';
 
 const router = express.Router();
 
@@ -9,6 +9,6 @@ router.post('/create', create);
 // Change this to a GET request for fetching profile
 router.get('/getProfile', getProfile);
 
-
+router.post('/updateProfile', updateProfile);
 
 export default router;

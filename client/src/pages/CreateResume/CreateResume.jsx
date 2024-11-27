@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './CreateResume.css';
@@ -9,7 +9,10 @@ import { UserContext } from 'LoginContext/UserContext';
 
 const MyResumes = () => {
 
+  const navigate = useNavigate()
+  const location = useLocation()
   const {state} = useContext(UserContext)
+  // console.log(state)
   const [user, setUser] = useState()
   const [formData, setFormData] = useState({
     fullName: '',
@@ -18,12 +21,12 @@ const MyResumes = () => {
     dob: '',
     gender: 'Male',
     religion: 'Hindu',
-    nationality: 'Indian',
+    country: 'Indian',
     maritalStatus: 'Single',
     hobbies: '',
     languagesKnown: '',
     address: '',
-    experiences: [{ title: "", company: "", startDate: "", endDate: "" }],
+    experiences: [{ title: "", company: "", startDate: "", endDate: "",description:"" }],
     education: [{ degree: "", institution: "", year: "" }],
     skills: [{ name: "", level: "" }],
     socialLink: [{ Platform: "", URL: "" }],
@@ -44,18 +47,18 @@ const MyResumes = () => {
 
         if (response.data ) {
           
-          console.log(response.data)
+          console.log("Return Data :",response.data)
           setFormData({
-            fullName: response.data.fullName || '',
+            fullName: response.data.fullname || '',
             email: response.data.email || '',
             address: response.data.address || '',
             dob: response.data.dob || '',
             country: response.data.country || '',
-            phone: response.data.phoneNumber || '',
-            sex: response.data.sex || '',
+            mobileNo: response.data.phoneNumber || '',
+            gender: response.data.sex || '',
             experiences: response.data.workExperience || [{ title: "", company: "", startDate: "", endDate: "" }],
             education: response.data.education || [{ degree: "", institution: "", year: "" }],
-            skills: response.data.skills || [{ name: '', level: '' }],
+            skills: response.data.skills || [{ name: "", level: 0 }],
             socialLink: response.data.socialLink || [{ platform: '', url: '' }],
             avatar: response.data.avatar || null,
           });
@@ -102,13 +105,12 @@ const MyResumes = () => {
     });
   };
 
-  // Add a new skill (to the end of the array)
-const handleAddSkill = () => {
-  setFormData((prevData) => ({
-    ...prevData,
-    skills: [...prevData.skills, { name: "", level: "" }]
-  }));
-};
+  const handleAddSkill = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      skills: [...prevData.skills, { name: "", level: 0 }],
+    }));
+  };
 
 const handleAddSocialLink = () => {
   setFormData(prevData => ({
@@ -178,19 +180,37 @@ const handleAddSocialLink = () => {
   };
 
   // Remove a skill
-const handleRemoveSkill = (index) => {
-  setFormData((prevData) => ({
-    ...prevData,
-    skills: prevData.skills.filter((_, i) => i !== index)
-  }));
-};
+  const handleRemoveSkill = (index) => {
+    setFormData((prevData) => {
+      const updatedSkills = [...prevData.skills];
+      updatedSkills.splice(index, 1);
+      return { ...prevData, skills: updatedSkills };
+    });
+  };
 
-const handleSubmit = (e) => {
-  e.preventDefault(); // Prevent the form from refreshing the page
-  // Log the formData to the console
-  console.log(formData);
-  // Alert the formData (convert to JSON string for better readability)
-  alert(JSON.stringify(formData, null, 2));
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  const payload = {
+    
+    userId: state.userId, // Ensure userId is included
+    ...formData,
+    phone: formData.mobileNo, // Match server's expected field names
+    socialLinks: formData.socialLink, // Correct the key name
+  };
+  
+  try {
+    const response = await axios.post('http://localhost:3001/profile/updateProfile', payload);
+    if (response.status === 200) {
+      alert('Profile saved successfully!');
+      console.log(response.data);
+    } else {
+      alert('There was an issue saving your profile.');
+    }
+  } catch (error) {
+    console.error('Error submitting the form:', error);
+    alert('Error submitting the form. Please try again later.');
+  }
 };
 
 
@@ -213,6 +233,11 @@ const handleRemoveSocialLink = (index) => {
     if (file) {
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleCreateCV = () => {
+    const currentLink = location.pathname; // Get the current link
+    navigate(`${currentLink}/${state.userId}`); // Append userID to the current link
   };
 
   const formattedDob = formData.dob ? formData.dob.split('T')[0] : '';
@@ -265,7 +290,7 @@ const handleRemoveSocialLink = (index) => {
 
             <div className="col-md-6">
               <label className="form-label">Full Name</label>
-              <input type="text" name="fullName" value={formData.fullName || ''} onChange={handleInputChange} placeholder="Dev Ninja" className="form-control" />
+              <input type="text" name="fullName" value={formData.fullName } onChange={handleInputChange} placeholder="Dev Ninja" className="form-control" />
             </div>
             <div className="col-md-6">
               <label className="form-label">Email</label>
@@ -289,9 +314,9 @@ const handleRemoveSocialLink = (index) => {
             <div className="col-md-6">
               <label className="form-label">Gender</label>
               <select className="form-select" name="gender" value={formData.gender} onChange={handleInputChange}>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Transgender</option>
+                <option value='Male'>Male</option>
+                <option value='Female'>Female</option>
+                <option value='Other'>Other</option>
               </select>
             </div>
 
@@ -302,16 +327,22 @@ const handleRemoveSocialLink = (index) => {
                 <option>Muslim</option>
                 <option>Sikh</option>
                 <option>Christian</option>
+                <option>Buddhism</option>
+                <option>None</option>
               </select>
             </div>
 
-            <div className="col-md-6">
-              <label className="form-label">Nationality</label>
-              <select className="form-select" name="nationality" value={formData.nationality} onChange={handleInputChange}>
-                <option>Indian</option>
-                <option>Non Indian</option>
-              </select>
-            </div>
+            <div className="form col-md-6">
+                <label className="form-label">Country</label>
+                <input
+                  type="text"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleInputChange}
+                  placeholder="Vietnam"
+                  className="form-control"
+                />
+              </div>
 
             <div className="col-md-6">
               <label className="form-label">Marital Status</label>
@@ -358,7 +389,7 @@ const handleRemoveSocialLink = (index) => {
                     <input type="text" className="form-control mt-1" name="title" value={exp.title} onChange={(e) => handleExperienceChange(e, index)} placeholder="Company Name" />
                     <input type="text" className="form-control mt-1" name="company" value={exp.company} onChange={(e) => handleExperienceChange(e, index)} placeholder="Location" />
                     <div className="d-flex justify-content-between mt-1">
-                      <input type="date" className="form-control me-1" name="start" value={formData.dob} onChange={(e) => handleExperienceChange(e, index)} placeholder="Start Date" />
+                      <input type="date" className="form-control me-1" name="start" value={exp.startDate} onChange={(e) => handleExperienceChange(e, index)} placeholder="Start Date" />
                       <input type="date" className="form-control" name="end" value={exp.end} onChange={(e) => handleExperienceChange(e, index)} placeholder="End Date" />
                     </div>
                     <textarea className="form-control mt-1" name="description" value={exp.description} onChange={(e) => handleExperienceChange(e, index)} rows="3" placeholder="Job Description"></textarea>
@@ -394,52 +425,51 @@ const handleRemoveSocialLink = (index) => {
             </div>
 
             <hr />
-            <div className="d-flex justify-content-between">
-              <h5 className="text-secondary"><i className="bi bi-star"></i> Skills</h5>
-              <div>
-                <button type="button" onClick={handleAddSkill} className="text-decoration-none">
-                  <i className="bi bi-file-earmark-plus"></i> Add New
-                </button>
-              </div>
-            </div>
+<div className="d-flex justify-content-between">
+  <h5 className="text-secondary"><i className="bi bi-star"></i> Skills</h5>
+  <div>
+    <button type="button" onClick={handleAddSkill} className="text-decoration-none">
+      <i className="bi bi-file-earmark-plus"></i> Add New
+    </button>
+  </div>
+</div>
 
-            <div className="d-flex flex-wrap">
-              {formData.skills && formData.skills.length > 0 && formData.skills.map((skill, index) => (
-                <div className="col-12 col-md-6 p-2" key={index}>
-                  <div className="exp p-2 border rounded">
-                    <div className="d-flex justify-content-between align-items-center">
-                      <h6>
-                        <i className="bi bi-caret-right"></i> {skill.name || 'Your Skill'}
-                      </h6>
-                      <button type="button" onClick={() => handleRemoveSkill(index)} className="btn btn-link p-0">
-                        <i className="bi bi-x-lg small"></i>
-                      </button>
-                    </div>
-                    <input
-                      type="text"
-                      className="form-control mt-1"
-                      value={skill.name}
-                      onChange={(e) => handleSkillChange(e, index, 'name')}
-                      placeholder="Skill"
-                    />
-                    {/* Slider for Skill Proficiency */}
-                    <div className="d-flex align-items-center mt-2">
-                      <label htmlFor={`skill-slider-${index}`} className="me-2">Proficiency:</label>
-                      <input
-                        type="range"
-                        id={`skill-slider-${index}`}
-                        className="form-range"
-                        min="0"
-                        max="100"
-                        value={skill.level}
-                        onChange={(e) => handleSkillChange(e, index, 'level')}
-                      />
-                      <span className="ms-2">{skill.level}%</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+<div className="d-flex flex-wrap">
+  {formData.skills && formData.skills.map((skill, index) => (
+    <div className="col-12 col-md-6 p-2" key={index}>
+      <div className="exp p-2 border rounded">
+        <div className="d-flex justify-content-between align-items-center">
+          <h6>
+            <i className="bi bi-caret-right"></i> {skill.name || 'Your Skill'}
+          </h6>
+          <button type="button" onClick={() => handleRemoveSkill(index)} className="btn btn-link p-0">
+            <i className="bi bi-x-lg small"></i>
+          </button>
+        </div>
+        <input
+          type="text"
+          className="form-control mt-1"
+          value={skill.name}
+          onChange={(e) => handleSkillChange(e, index, 'name')}
+          placeholder="Skill"
+        />
+        <div className="d-flex align-items-center mt-2">
+          <label htmlFor={`skill-slider-${index}`} className="me-2">Proficiency:</label>
+          <input
+            type="range"
+            id={`skill-slider-${index}`}
+            className="form-range"
+            min="0"
+            max="100"
+            value={skill.level}
+            onChange={(e) => handleSkillChange(e, index, 'level')}
+          />
+          <span className="ms-2">{skill.level}%</span>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
 
             <hr />
             <div className="d-flex justify-content-between">
@@ -482,6 +512,7 @@ const handleRemoveSocialLink = (index) => {
                 <button type="submit" onClick={handleSubmit} className="button type2">Save Profile</button>
             </div>
           </form>
+          <button onClick={handleCreateCV}>Create CV</button>
         </div>
       </div>
     </div>

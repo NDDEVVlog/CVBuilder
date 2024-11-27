@@ -3,48 +3,35 @@ import bcrypt from 'bcrypt';
 
 // Education schema
 const educationSchema = new mongoose.Schema({
-    status: {
-        type: String,
-        required: true // You can decide if this should be required or optional
-    },
-    shortDescription: {
-        type: String
-    },  
     institution: {
         type: String, // Name of the institution (e.g., university, school)
-        required: true
+
     },
     degree: {
         type: String, // Degree obtained (e.g., Bachelor's, Master's)
-        required: true
+
     },
-    fieldOfStudy: {
-        type: String // Area of study (e.g., Computer Science)
+    year: {
+        type: String // Date when the education started
     },
-    startDate: {
-        type: Date // Date when the education started
-    },
-    endDate: {
-        type: Date // Date when the education ended (can be null if ongoing)
-    }
+    
 });
 
 // Work experience schema
 const workExperienceSchema = new mongoose.Schema({
     jobTitle: {
         type: String,
-        required: true
+
     },
     company: {
         type: String,
-        required: true
+
     },
     location: {
         type: String // Location of the company
     },
     startDate: {
         type: Date,
-        required: true
     },
     endDate: {
         type: Date // Can be null if the job is ongoing
@@ -58,22 +45,22 @@ const workExperienceSchema = new mongoose.Schema({
 const socialLinksSchema = new mongoose.Schema({
     platform: {
         type: String, // e.g., LinkedIn, GitHub, Twitter
-        required: true
+
     },
     url: {
         type: String, // Link to the social profile
-        required: true
+
     }
 });
 const skillSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true, // Ensures the name field is mandatory
+     
         trim: true,     // Removes whitespace from the beginning and end
     },
     level: {
         type: Number,
-        required: true, // Ensures the level field is mandatory
+
         min: 0,         // Minimum value for the level field
         max: 100        // Maximum value for the level field
     }
@@ -89,7 +76,8 @@ const profileSchema = new mongoose.Schema({
     fullname: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        alias: 'fullName' // Allows using `fullName` in the request
     },
     dob:{
         type:Date,
@@ -98,14 +86,21 @@ const profileSchema = new mongoose.Schema({
     },
     religion:{
         type: String,
-        required: true,
-        unique: true,
+        trim: true
+    },
+    nationality:{
+        type: String,
+
+
         trim: true
     },
     phoneNumber: {
         type: String,
-        required: true,
-        unique: true,
+
+        trim: true
+    },
+    maritalStatus: {
+        type: String,
         trim: true
     },
     email: {
@@ -120,6 +115,9 @@ const profileSchema = new mongoose.Schema({
     sex:{
         type:String,
         required:true,
+    },
+    languagesKnown: {
+        type:String,
     },
     skills: [skillSchema],
     education: [educationSchema], // Embedding education schema

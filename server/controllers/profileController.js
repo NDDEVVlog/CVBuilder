@@ -1,24 +1,41 @@
 import Profile from '../models/Profile.js';
 
 // Create a new profile
+// Create a new profile
 export const create = async (req, res) => {
     try {
-        const { userId, fullName, email, address, dob, phone, sex, skills = [], education = [], workExperience = [], socialLinks = [] } = req.body;
+        const {
+            userId,
+            fullName,
+            email,
+            address,
+            dob,
+            phone,
+            sex,
+            skills = [],
+            education = [],
+            workExperience = [],
+            socialLinks = [],
+        } = req.body;
 
-        console.log('Incoming profile data:', req.body);
+        console.log("Incoming profile data:", req.body);
 
         if (!userId) {
-            return res.status(400).json({ message: 'User ID is required' });
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        if (!fullName || fullName.trim() === "") {
+            return res.status(400).json({ message: "Full Name is required" });
         }
 
         const existingProfile = await Profile.findOne({ user: userId });
         if (existingProfile) {
-            return res.status(400).json({ message: 'Profile already exists for this user' });
+            return res.status(400).json({ message: "Profile already exists for this user" });
         }
 
         const newProfile = new Profile({
             user: userId,
-            fullname: fullName,
+            fullname: fullName.trim(),
             email,
             address,
             dob,
@@ -31,14 +48,16 @@ export const create = async (req, res) => {
         });
 
         const savedProfile = await newProfile.save();
-        console.log('Profile saved:', savedProfile);
+        console.log("Profile saved:", savedProfile);
 
-        res.status(201).json({ message: 'Profile saved successfully', profile: savedProfile });
+        res.status(201).json({ message: "Profile saved successfully", profile: savedProfile });
     } catch (error) {
-        console.error('Error saving profile:', error);
-        res.status(500).json({ message: 'Failed to save profile', error: error.message });
+        console.error("Error saving profile:", error);
+        res.status(500).json({ message: "Failed to save profile", error: error.message });
     }
 };
+
+
 
 export const getProfile = async (req, res) => {
   const { id } = req.query; // Get the userId from the query parameter
@@ -64,8 +83,9 @@ export const getProfile = async (req, res) => {
 
 // Update an existing profile
 export const updateProfile = async (req, res) => {
+    console.log('Incoming update data:', req.body);
     try {
-        const { userId, fullName, email, address, dob, phone, sex, skills, education, workExperience, socialLinks } = req.body;
+        const { userId, fullName, email, address, dob, phone, gender, skills, education, workExperience, socialLinks } = req.body;
 
         console.log('Incoming update data:', req.body);
 
@@ -85,7 +105,7 @@ export const updateProfile = async (req, res) => {
         if (address) profile.address = address;
         if (dob) profile.dob = dob;
         if (phone) profile.phoneNumber = phone;
-        if (sex) profile.sex = sex;
+        if (gender) profile.sex = gender;
         if (skills) profile.skills = skills;
         if (education) profile.education = education;
         if (workExperience) profile.workExperience = workExperience;

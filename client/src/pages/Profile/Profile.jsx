@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Profile.css';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import axios from 'axios'
+import { UserContext } from 'LoginContext/UserContext';
 
 const Profile = () => {
+
+  const {state} = useContext(UserContext)
+  const [user, setUser] = useState()
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -13,6 +19,66 @@ const Profile = () => {
     phone: '',
     sex: '',
   });
+  // const id = state.userid
+  // console.log(state)
+
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (!state.userId) {
+      console.error('User ID is missing in the context state!');
+      return;
+    }
+  
+    const fetchData = async () => {
+      try {
+        // Fetch user data
+        const userResponse = await axios.get('http://localhost:3001/api/users/getUser', {
+          params: { id: state.userId },
+        });
+        console.log(userResponse.data);
+  
+        setUser(userResponse.data); // Set user data to state
+        setFormData({
+          fullName: userResponse.data.fullName || '',
+          email: userResponse.data.email || '',
+          address: userResponse.data.address || '',
+          dob: userResponse.data.dob || '',
+          country: userResponse.data.country || '',
+          phone: userResponse.data.phone || '',
+          sex: userResponse.data.sex || '',
+        });
+  
+        // Fetch profile data to check if it exists
+        const profileResponse = await axios.get('http://localhost:3001/profile/getProfile', {
+          params: { id: state.userId },
+        });
+  
+        // If profile exists, navigate to /CreateResume
+        if (profileResponse.data && profileResponse.data._id) {
+          navigate('/CreateResume');  // Profile exists, redirect
+        } else {
+          // Handle case where profile does not exist
+          console.log('Profile does not exist.');
+          // Optionally, redirect to a profile creation page or show a message
+           navigate('/CreateProfile');
+        }
+  
+      } catch (err) {
+        console.error('Error fetching user data or profile data:', err);
+        // Optional: Show user-friendly error message if necessary
+      }
+    };
+  
+    fetchData();
+  }, [state.userId, navigate]);  // Include navigate in dependency array
+
+
+  console.log(user)
+  console.log(state)
+
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,21 +88,41 @@ const Profile = () => {
     }));
   };
 
-  const handleSaveProfileClick = async () => {
-    // Display the form data (or handle it as needed)
+  const handleSaveProfileClick = async (e) => {
+    e.preventDefault();
+    
+    if (!state.userId) {
+      console.error('User ID is missing!');
+      return;
+    }
+  
+    const profileData = {
+      userId: state.userId, // Add the userId here
+      fullName: formData.fullName,
+      email: formData.email,
+      address: formData.address,
+      dob: formData.dob,
+      country: formData.country,
+      phone: formData.phone,
+      sex: formData.sex,
+    };
+  
     try {
-      const response = await fetch('http://localhost:3001/api/profile', {
+      const response = await fetch('http://localhost:3001/profile/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData), // Send form data as JSON
+        body: JSON.stringify(profileData),
       });
-
+  
       if (!response.ok) {
         throw new Error('Something went wrong');
       }
-
+      if (response.ok) {
+        navigate('/CreateResume'); // Adjust this to your target route
+      }
+  
       const result = await response.json();
       alert('Profile data saved successfully!');
       console.log('Server response:', result);
@@ -44,16 +130,18 @@ const Profile = () => {
       console.error('Error:', error);
       alert('Failed to save profile data.');
     }
-
-
+  
     alert(`Profile Data: 
-    Name: ${formData.fullName}
-    Email: ${formData.email}
-    Address: ${formData.address}
-    DOB: ${formData.dob}
-    Country: ${formData.country}
-    Phone: ${formData.phone}
-    Sex: ${formData.sex}`);
+      Name: ${formData.fullName}
+      Email: ${formData.email}
+      Address: ${formData.address}
+      DOB: ${formData.dob}
+      Country: ${formData.country}
+      Phone: ${formData.phone}
+      Sex: ${formData.sex}`);
+    
+      
+     
   };
 
   return (
@@ -115,6 +203,7 @@ const Profile = () => {
                   onChange={handleChange}
                   placeholder="dev@abc.com"
                   className="form-control"
+                  readOnly
                 />
               </div>
               <div className="form col-md-6">
@@ -158,13 +247,13 @@ const Profile = () => {
               </div>
               <div className="form col-md-6">
                 <label className="form-label">Sex</label>
-                <select name="lang" id="lang-select">
+
+                <select name="sex" id="sex" onChange={handleChange}>
                
                     <option value="">-------- Choose your sex --------</option>
-                    <option value="csharp">Male</option>
-                    <option value="cpp">Female</option>
-                    <option value="php">Others</option>
-                    <option value="ruby">Don't ask me !</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Others">Others</option>
                 </select>
               </div>
               <div className="col-12 text-end">
