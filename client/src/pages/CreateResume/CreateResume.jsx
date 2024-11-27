@@ -7,7 +7,7 @@ import axios from 'axios'
 import { UserContext } from 'LoginContext/UserContext';
 
 
-const MyResumes = () => {
+const CreateResume = () => {
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -425,51 +425,51 @@ const handleRemoveSocialLink = (index) => {
             </div>
 
             <hr />
-<div className="d-flex justify-content-between">
-  <h5 className="text-secondary"><i className="bi bi-star"></i> Skills</h5>
-  <div>
-    <button type="button" onClick={handleAddSkill} className="text-decoration-none">
-      <i className="bi bi-file-earmark-plus"></i> Add New
-    </button>
-  </div>
-</div>
+            <div className="d-flex justify-content-between">
+              <h5 className="text-secondary"><i className="bi bi-star"></i> Skills</h5>
+              <div>
+                <button type="button" onClick={handleAddSkill} className="text-decoration-none">
+                  <i className="bi bi-file-earmark-plus"></i> Add New
+                </button>
+              </div>
+            </div>
 
-<div className="d-flex flex-wrap">
-  {formData.skills && formData.skills.map((skill, index) => (
-    <div className="col-12 col-md-6 p-2" key={index}>
-      <div className="exp p-2 border rounded">
-        <div className="d-flex justify-content-between align-items-center">
-          <h6>
-            <i className="bi bi-caret-right"></i> {skill.name || 'Your Skill'}
-          </h6>
-          <button type="button" onClick={() => handleRemoveSkill(index)} className="btn btn-link p-0">
-            <i className="bi bi-x-lg small"></i>
-          </button>
-        </div>
-        <input
-          type="text"
-          className="form-control mt-1"
-          value={skill.name}
-          onChange={(e) => handleSkillChange(e, index, 'name')}
-          placeholder="Skill"
-        />
-        <div className="d-flex align-items-center mt-2">
-          <label htmlFor={`skill-slider-${index}`} className="me-2">Proficiency:</label>
-          <input
-            type="range"
-            id={`skill-slider-${index}`}
-            className="form-range"
-            min="0"
-            max="100"
-            value={skill.level}
-            onChange={(e) => handleSkillChange(e, index, 'level')}
-          />
-          <span className="ms-2">{skill.level}%</span>
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
+            <div className="d-flex flex-wrap">
+              {formData.skills && formData.skills.map((skill, index) => (
+                <div className="col-12 col-md-6 p-2" key={index}>
+                  <div className="exp p-2 border rounded">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <h6>
+                        <i className="bi bi-caret-right"></i> {skill.name || 'Your Skill'}
+                      </h6>
+                      <button type="button" onClick={() => handleRemoveSkill(index)} className="btn btn-link p-0">
+                        <i className="bi bi-x-lg small"></i>
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      className="form-control mt-1"
+                      value={skill.name}
+                      onChange={(e) => handleSkillChange(e, index, 'name')}
+                      placeholder="Skill"
+                    />
+                    <div className="d-flex align-items-center mt-2">
+                      <label htmlFor={`skill-slider-${index}`} className="me-2">Proficiency:</label>
+                      <input
+                        type="range"
+                        id={`skill-slider-${index}`}
+                        className="form-range"
+                        min="0"
+                        max="100"
+                        value={skill.level}
+                        onChange={(e) => handleSkillChange(e, index, 'level')}
+                      />
+                      <span className="ms-2">{skill.level}%</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
             <hr />
             <div className="d-flex justify-content-between">
@@ -519,4 +519,4 @@ const handleRemoveSocialLink = (index) => {
   );
 };
 
-export default MyResumes;
+export default CreateResume;

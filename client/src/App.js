@@ -7,6 +7,7 @@ import Profile from 'pages/Profile/Profile';
 import Register from 'pages/Register/Register';
 import SignUp from 'pages/Signup';
 import CreateCV from 'pages/CreateCV/CreateCV';
+import CreateResume from 'pages/CreateResume/CreateResume';
 
 
 function App() {
