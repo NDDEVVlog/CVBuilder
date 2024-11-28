@@ -8,7 +8,9 @@ import Register from 'pages/Register/Register';
 import SignUp from 'pages/Signup';
 import CreateCV from 'pages/CreateCV/CreateCV';
 import CreateResume from 'pages/CreateResume/CreateResume';
-
+import CV1 from 'pages/CreateCV/1/CV1';
+import CV2 from 'pages/CreateCV/2/CV2';
+import CV3 from 'pages/CreateCV/3/CV3';
 
 function App() {
   return (
@@ -26,7 +28,9 @@ function App() {
 
           <Route path='/CreateResume' element={<CreateResume/>}/>
           <Route path='/CreateResume/:id' element={<CreateCV/>}/>
-
+          <Route path='/CreateResume/1/:id' element={<CV1 />} />
+          <Route path='/CreateResume/2/:id' element={<CV2 />} />
+          <Route path='/CreateResume/3/:id' element={<CV3 />} />
         </Routes>
       </BrowserRouter>
 

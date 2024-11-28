@@ -240,6 +240,10 @@ const handleRemoveSocialLink = (index) => {
     navigate(`${currentLink}/${state.userId}`); // Append userID to the current link
   };
 
+  const handleNavigateToCV = (cvPageNumber) => {
+    const currentLink = location.pathname; // Get the current link
+    navigate(`${currentLink}/${cvPageNumber}/${state.userId}`); // Append the CV page number and userId to the link
+  };
   const formattedDob = formData.dob ? formData.dob.split('T')[0] : '';
 
   return (
@@ -513,6 +517,9 @@ const handleRemoveSocialLink = (index) => {
             </div>
           </form>
           <button onClick={handleCreateCV}>Create CV</button>
+          <button onClick={() => handleNavigateToCV(1)}>Go to CV 1</button>
+          <button onClick={() => handleNavigateToCV(2)}>Go to CV 2</button>
+          <button onClick={() => handleNavigateToCV(3)}>Go to CV 3</button>
         </div>
       </div>
     </div>
