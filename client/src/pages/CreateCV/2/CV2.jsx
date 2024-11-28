@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './CreateCV.css';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
