@@ -16,7 +16,7 @@ const Register = () => {
 
     // Validate form data
     const validateForm = () => {
-      if (firstName.trim() === '' || lastName.trim() === '' || username.trim() === '' || password.trim() === '') {
+      if (firstName.trim() === '' || lastName.trim() === '' || password.trim() === ''|| email.trim()==='') {
           setError('Please fill in all fields.');
           return false;
       }
@@ -48,7 +48,7 @@ const Register = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ firstName, lastName, username, password }),
+                    body: JSON.stringify({ firstName, lastName, password,email }),
                 });
 
                 const data = await response.json();
@@ -69,13 +69,13 @@ const Register = () => {
         <div>
             <nav className="navbar">
                 <div className="container">
-                    <a className="navbar-brand" href="Home">
+                    <a className="navbar-brand" href="#">
                         <img src="/Pictures/logo.png" alt="Logo" height={24} className="d-inline-block align-text-top" />
                         <b> CV</b><span>Online Builder</span>
                     </a>
                     <div className='btns'>
-                        <a href="Profile"><button className="btn btn-sm btn-dark"><i className="bi bi-person-circle" /> My Profile</button></a>
-                        <a href="Login"><button className="btn btn-sm btn-danger"><i className="bi bi-box-arrow-left" /> Logout</button></a>
+                        <button className="btn btn-sm btn-dark"><i className="bi bi-person-circle" /> My Profile</button>
+                        <button className="btn btn-sm btn-danger"><i className="bi bi-box-arrow-left" /> Logout</button>
                     </div>
                 </div>
             </nav>
@@ -121,8 +121,8 @@ const Register = () => {
                             className="form-control form-control-register"
                             id="floatingEmail"
                             placeholder=""
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <label htmlFor="floatingEmail"><i className="bi bi-envelope"></i> Email address</label>
                     </div>

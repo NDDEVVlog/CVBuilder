@@ -10,6 +10,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { getData } from "./controllers/getTestData.js";
 import userRoutes from './routes/userRoutes.js';
+import profileRoutes from './routes/profileRoutes.js'
 
 
 // Configuration
@@ -69,4 +70,5 @@ app.post('/api/profile', (req, res) => {
   });
 
   app.use('/api/users', userRoutes);
+  app.use('/profile', profileRoutes)
 

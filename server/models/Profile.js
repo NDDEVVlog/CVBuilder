@@ -1,65 +1,132 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
 import bcrypt from 'bcrypt';
 
+// Education schema
 const educationSchema = new mongoose.Schema({
-    status :{
-        type:String 
-    },
-    shortDescription: {
-        type: String
-    }
-})
+    institution: {
+        type: String, // Name of the institution (e.g., university, school)
 
-// Tạo schema cho user
-const profileSchema = new mongoose.Schema({
-    user:{
-        type:Schema.Types.ObjectId,
-        ref: 'User',
-        required:true,
     },
-    firstName: {
+    degree: {
+        type: String, // Degree obtained (e.g., Bachelor's, Master's)
+
+    },
+    year: {
+        type: String // Date when the education started
+    },
+    
+});
+
+// Work experience schema
+const workExperienceSchema = new mongoose.Schema({
+    jobTitle: {
+        type: String,
+
+    },
+    company: {
+        type: String,
+
+    },
+    location: {
+        type: String // Location of the company
+    },
+    startDate: {
+        type: Date,
+    },
+    endDate: {
+        type: Date // Can be null if the job is ongoing
+    },
+    description: {
+        type: String // Description of job responsibilities
+    }
+});
+
+// Social links schema
+const socialLinksSchema = new mongoose.Schema({
+    platform: {
+        type: String, // e.g., LinkedIn, GitHub, Twitter
+
+    },
+    url: {
+        type: String, // Link to the social profile
+
+    }
+});
+const skillSchema = new mongoose.Schema({
+    name: {
+        type: String,
+     
+        trim: true,     // Removes whitespace from the beginning and end
+    },
+    level: {
+        type: Number,
+
+        min: 0,         // Minimum value for the level field
+        max: 100        // Maximum value for the level field
+    }
+});
+
+// Main user profile schema
+const profileSchema = new mongoose.Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    fullname: {
         type: String,
         required: true,
-        unique: true,
+        trim: true,
+        alias: 'fullName' // Allows using `fullName` in the request
+    },
+    dob:{
+        type:Date,
+        required: true,
         trim: true
     },
-    lastName: {
+    religion:{
         type: String,
-        required: true,
-        unique: true,
+        trim: true
+    },
+    nationality:{
+        type: String,
+
+
         trim: true
     },
     phoneNumber: {
         type: String,
+
+        trim: true
+    },
+    maritalStatus: {
+        type: String,
+        trim: true
+    },
+    email: {
+        type: String, // Email address of the user
         required: true,
         unique: true,
         trim: true
     },
-    education: [educationSchema],
-    
-
-
+    address: {
+        type: String,
+    },
+    sex:{
+        type:String,
+        required:true,
+    },
+    languagesKnown: {
+        type:String,
+    },
+    skills: [skillSchema],
+    education: [educationSchema], // Embedding education schema
+    workExperience: [workExperienceSchema], // Embedding work experience schema
+    socialLinks: [socialLinksSchema], // Embedding social links schema
 }, { timestamps: true });
 
-// Mã hóa mật khẩu trước khi lưu user vào database
-userSchema.pre('save', async function(next) {
-    try {
-        if (this.isModified('password') || this.isNew) {
-            const salt = await bcrypt.genSalt(10);
-            this.password = await bcrypt.hash(this.password, salt);
-        }
-        next();
-    } catch (err) {
-        next(err);
-    }
-});
 
-
-// So sánh mật khẩu đã mã hóa với mật khẩu người dùng nhập vào
-userSchema.methods.comparePassword = async function(password) {
-    return bcrypt.compare(password, this.password);
-};
 
 // Xuất model User
-const User = mongoose.model('User', userSchema);
-export default User;
+const Profile = mongoose.model('Profile', profileSchema);
+export default Profile;

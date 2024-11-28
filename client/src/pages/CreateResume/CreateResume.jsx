@@ -1,9 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './CreateResume.css';
+import axios from 'axios'
+import { UserContext } from 'LoginContext/UserContext';
 
-const MyResumes = () => {
+
+const CreateResume = () => {
+
+  const navigate = useNavigate()
+  const location = useLocation()
+  const {state} = useContext(UserContext)
+  // console.log(state)
+  const [user, setUser] = useState()
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -11,15 +21,63 @@ const MyResumes = () => {
     dob: '',
     gender: 'Male',
     religion: 'Hindu',
-    nationality: 'Indian',
+    country: 'Indian',
     maritalStatus: 'Single',
     hobbies: '',
     languagesKnown: '',
     address: '',
-    experiences: [{ }],
-    education: [{  }],
-    skills: [''],
+    experiences: [{ title: "", company: "", startDate: "", endDate: "",description:"" }],
+    education: [{ degree: "", institution: "", year: "" }],
+    skills: [{ name: "", level: "" }],
+    socialLink: [{ Platform: "", URL: "" }],
+    avatar: null,
   });
+
+  useEffect(() => {
+    if (!state.userId) {
+      console.error('User ID is missing in the context state!');
+      return;
+    }
+
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/profile/getProfile', {
+          params: { id: state.userId },
+        });
+
+        if (response.data ) {
+          
+          console.log("Return Data :",response.data)
+          setFormData({
+            fullName: response.data.fullname || '',
+            email: response.data.email || '',
+            address: response.data.address || '',
+            dob: response.data.dob || '',
+            country: response.data.country || '',
+            mobileNo: response.data.phoneNumber || '',
+            gender: response.data.sex || '',
+            experiences: response.data.workExperience || [{ title: "", company: "", startDate: "", endDate: "" }],
+            education: response.data.education || [{ degree: "", institution: "", year: "" }],
+            skills: response.data.skills || [{ name: "", level: 0 }],
+            socialLink: response.data.socialLink || [{ platform: '', url: '' }],
+            avatar: response.data.avatar || null,
+          });
+        } else {
+          console.log('Profile not found for user ID:', state.userId);
+        }
+      } catch (err) {
+        console.error('Error fetching user data:', err);
+      }
+    };
+
+    fetchProfile();
+  }, [state.userId]);
+
+
+  console.log(user)
+  console.log(formData)
+
+  
 
   useEffect(() => {
     document.title = 'My Resumes';
@@ -36,7 +94,7 @@ const MyResumes = () => {
   const handleAddExperience = () => {
     setFormData({
       ...formData,
-      experiences: [...formData.experiences, { title: '', company: '', start: '', end: '', description: '' }],
+      experiences: [...formData.experiences, { title: '', company: '',location:' ' ,start: '', end: '', description: '' }],
     });
   };
 
@@ -48,11 +106,19 @@ const MyResumes = () => {
   };
 
   const handleAddSkill = () => {
-    setFormData({
-      ...formData,
-      skills: [...formData.skills, ''],
-    });
+    setFormData((prevData) => ({
+      ...prevData,
+      skills: [...prevData.skills, { name: "", level: 0 }],
+    }));
   };
+
+const handleAddSocialLink = () => {
+  setFormData(prevData => ({
+    ...prevData,
+    socialLink: [...prevData.socialLink, { Platform: "", URL: "" }]
+  }));
+};
+
 
   const handleExperienceChange = (e, index) => {
     const { name, value } = e.target;
@@ -72,12 +138,31 @@ const MyResumes = () => {
     }));
   };
 
-  const handleSkillChange = (e, index) => {
-    const updatedSkills = formData.skills.map((skill, i) => (i === index ? e.target.value : skill));
-    setFormData((prevData) => ({
-      ...prevData,
-      skills: updatedSkills,
-    }));
+  const handleSkillChange = (e, index, field) => {
+    const { value } = e.target;
+    
+    // Update skill value, ensuring that skill.level is a number.
+    if (field === 'level') {
+      setFormData((prevData) => {
+        const updatedSkills = [...prevData.skills];
+        updatedSkills[index] = { ...updatedSkills[index], level: Number(value) }; // Ensuring it's a number
+        return { ...prevData, skills: updatedSkills };
+      });
+    } else {
+      setFormData((prevData) => {
+        const updatedSkills = [...prevData.skills];
+        updatedSkills[index] = { ...updatedSkills[index], [field]: value }; // Updating other fields
+        return { ...prevData, skills: updatedSkills };
+      });
+    }
+  };
+  const handleSocialLinkChange = (e, index, field) => {
+    const value = e.target.value;
+    setFormData(prevData => {
+      const updatedLinks = [...prevData.socialLink];
+      updatedLinks[index][field] = value;
+      return { ...prevData, socialLink: updatedLinks };
+    });
   };
 
   const handleRemoveExperience = (index) => {
@@ -94,12 +179,48 @@ const MyResumes = () => {
     }));
   };
 
+  // Remove a skill
   const handleRemoveSkill = (index) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      skills: prevData.skills.filter((_, i) => i !== index),
-    }));
+    setFormData((prevData) => {
+      const updatedSkills = [...prevData.skills];
+      updatedSkills.splice(index, 1);
+      return { ...prevData, skills: updatedSkills };
+    });
   };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  const payload = {
+    
+    userId: state.userId, // Ensure userId is included
+    ...formData,
+    phone: formData.mobileNo, // Match server's expected field names
+    socialLinks: formData.socialLink, // Correct the key name
+  };
+  
+  try {
+    const response = await axios.post('http://localhost:3001/profile/updateProfile', payload);
+    if (response.status === 200) {
+      alert('Profile saved successfully!');
+      console.log(response.data);
+    } else {
+      alert('There was an issue saving your profile.');
+    }
+  } catch (error) {
+    console.error('Error submitting the form:', error);
+    alert('Error submitting the form. Please try again later.');
+  }
+};
+
+
+const handleRemoveSocialLink = (index) => {
+  setFormData((prevData) => ({
+    ...prevData,
+    socialLink: prevData.socialLink.filter((_, i) => i !== index), // Fix the typo
+  }));
+};
+
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -113,25 +234,33 @@ const MyResumes = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  const handleCreateCV = () => {
+    const currentLink = location.pathname; // Get the current link
+    navigate(`${currentLink}/${state.userId}`); // Append userID to the current link
+  };
+
+  const handleNavigateToCV = (cvPageNumber) => {
+    const currentLink = location.pathname; // Get the current link
+    navigate(`${currentLink}/${cvPageNumber}/${state.userId}`); // Append the CV page number and userId to the link
+  };
+  const formattedDob = formData.dob ? formData.dob.split('T')[0] : '';
+
   return (
     <div>
       <nav className="navbar bg-body-tertiary shadow" id='nav-create'>
         <div className="container">
-          <a className="navbar-brand" href="Home">
+          <a className="navbar-brand" href="#">
             <img src="/Pictures/logo.png" alt="Logo" height="24" className="d-inline-block align-text-top" />
             <b>CV</b> <span>Online Builder</span>
           </a>
           <div className="btns">
-            <a href='Profile'>
-            <button className="btn btn-sm btn-dark">
+            <button className="btn btn-sm btn-dark" >
               <i className="bi bi-person-circle" /> My Profile
             </button>
-            </a>
-            <a href='Login'>
             <button className="btn btn-sm btn-danger">
               <i className="bi bi-box-arrow-left" /> Logout
             </button>
-            </a>
           </div>
         </div>
       </nav>
@@ -165,27 +294,33 @@ const MyResumes = () => {
 
             <div className="col-md-6">
               <label className="form-label">Full Name</label>
-              <input type="text" name="fullName" value={formData.fullName} onChange={handleInputChange} placeholder="Dev Ninja" className="form-control" />
+              <input type="text" name="fullName" value={formData.fullName } onChange={handleInputChange} placeholder="Dev Ninja" className="form-control" />
             </div>
             <div className="col-md-6">
               <label className="form-label">Email</label>
-              <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="dev@abc.com" className="form-control" />
+              <input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="dev@abc.com" className="form-control" readOnly />
             </div>
             <div className="col-md-6">
               <label className="form-label">Mobile No</label>
-              <input type="number" name="mobileNo" value={formData.mobileNo} onChange={handleInputChange} placeholder="9569569569" className="form-control" />
+              <input type="number" name="mobileNo" value={formData.mobileNo} onChange={handleInputChange} placeholder="" className="form-control" />
             </div>
             <div className="col-md-6">
               <label className="form-label">Date Of Birth</label>
-              <input type="date" name="dob" value={formData.dob} onChange={handleInputChange} className="form-control" />
+              <input
+                type="date"
+                name="dob"
+                value={formattedDob} // Use formatted date here
+                onChange={handleInputChange}
+                className="form-control"
+              />
             </div>
 
             <div className="col-md-6">
               <label className="form-label">Gender</label>
               <select className="form-select" name="gender" value={formData.gender} onChange={handleInputChange}>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Transgender</option>
+                <option value='Male'>Male</option>
+                <option value='Female'>Female</option>
+                <option value='Other'>Other</option>
               </select>
             </div>
 
@@ -196,16 +331,22 @@ const MyResumes = () => {
                 <option>Muslim</option>
                 <option>Sikh</option>
                 <option>Christian</option>
+                <option>Buddhism</option>
+                <option>None</option>
               </select>
             </div>
 
-            <div className="col-md-6">
-              <label className="form-label">Nationality</label>
-              <select className="form-select" name="nationality" value={formData.nationality} onChange={handleInputChange}>
-                <option>Indian</option>
-                <option>Non Indian</option>
-              </select>
-            </div>
+            <div className="form col-md-6">
+                <label className="form-label">Country</label>
+                <input
+                  type="text"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleInputChange}
+                  placeholder="Vietnam"
+                  className="form-control"
+                />
+              </div>
 
             <div className="col-md-6">
               <label className="form-label">Marital Status</label>
@@ -252,8 +393,8 @@ const MyResumes = () => {
                     <input type="text" className="form-control mt-1" name="title" value={exp.title} onChange={(e) => handleExperienceChange(e, index)} placeholder="Company Name" />
                     <input type="text" className="form-control mt-1" name="company" value={exp.company} onChange={(e) => handleExperienceChange(e, index)} placeholder="Location" />
                     <div className="d-flex justify-content-between mt-1">
-                      <input type="text" className="form-control me-1" name="start" value={exp.start} onChange={(e) => handleExperienceChange(e, index)} placeholder="Start Date" />
-                      <input type="text" className="form-control" name="end" value={exp.end} onChange={(e) => handleExperienceChange(e, index)} placeholder="End Date" />
+                      <input type="date" className="form-control me-1" name="start" value={exp.startDate} onChange={(e) => handleExperienceChange(e, index)} placeholder="Start Date" />
+                      <input type="date" className="form-control" name="end" value={exp.end} onChange={(e) => handleExperienceChange(e, index)} placeholder="End Date" />
                     </div>
                     <textarea className="form-control mt-1" name="description" value={exp.description} onChange={(e) => handleExperienceChange(e, index)} rows="3" placeholder="Job Description"></textarea>
                   </div>
@@ -291,34 +432,98 @@ const MyResumes = () => {
             <div className="d-flex justify-content-between">
               <h5 className="text-secondary"><i className="bi bi-star"></i> Skills</h5>
               <div>
-                <button type="button" onClick={handleAddSkill} className="text-decoration-none"><i className="bi bi-file-earmark-plus"></i> Add New</button>
+                <button type="button" onClick={handleAddSkill} className="text-decoration-none">
+                  <i className="bi bi-file-earmark-plus"></i> Add New
+                </button>
               </div>
             </div>
 
             <div className="d-flex flex-wrap">
-              {formData.skills.map((skill, index) => (
+              {formData.skills && formData.skills.map((skill, index) => (
                 <div className="col-12 col-md-6 p-2" key={index}>
                   <div className="exp p-2 border rounded">
                     <div className="d-flex justify-content-between align-items-center">
-                      <h6><i className="bi bi-caret-right"></i> {skill || 'Your Skill'}</h6>
+                      <h6>
+                        <i className="bi bi-caret-right"></i> {skill.name || 'Your Skill'}
+                      </h6>
                       <button type="button" onClick={() => handleRemoveSkill(index)} className="btn btn-link p-0">
                         <i className="bi bi-x-lg small"></i>
                       </button>
                     </div>
-                    <input type="text" className="form-control mt-1" value={skill} onChange={(e) => handleSkillChange(e, index)} placeholder="Skill" />
+                    <input
+                      type="text"
+                      className="form-control mt-1"
+                      value={skill.name}
+                      onChange={(e) => handleSkillChange(e, index, 'name')}
+                      placeholder="Skill"
+                    />
+                    <div className="d-flex align-items-center mt-2">
+                      <label htmlFor={`skill-slider-${index}`} className="me-2">Proficiency:</label>
+                      <input
+                        type="range"
+                        id={`skill-slider-${index}`}
+                        className="form-range"
+                        min="0"
+                        max="100"
+                        value={skill.level}
+                        onChange={(e) => handleSkillChange(e, index, 'level')}
+                      />
+                      <span className="ms-2">{skill.level}%</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <hr />
+            <div className="d-flex justify-content-between">
+              <h5 className="text-secondary"><i className="bi bi-star"></i> Social Links</h5>
+              <div>
+                <button type="button" onClick={handleAddSocialLink} className="text-decoration-none"><i className="bi bi-file-earmark-plus"></i> Add New</button>
+              </div>
+            </div>
+
+            <div className="d-flex flex-wrap">
+              {formData.socialLink && formData.socialLink.length > 0 && formData.socialLink.map((socialLink, index) => (
+                <div className="col-12 col-md-6 p-2" key={index}>
+                  <div className="exp p-2 border rounded">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <h6><i className="bi bi-caret-right"></i> {socialLink.Platform || 'Your Link'}</h6>
+                      <button type="button" onClick={() => handleRemoveSocialLink(index)} className="btn btn-link p-0">
+                        <i className="bi bi-x-lg small"></i>
+                      </button>
+                    </div>
+                    <input 
+                      type="text" 
+                      className="form-control mt-1" 
+                      value={socialLink.Platform} 
+                      onChange={(e) => handleSocialLinkChange(e, index,'Platform')} 
+                      placeholder="Platform" 
+                    />
+                    <input 
+                      type="text" 
+                      className="form-control mt-1" 
+                      value={socialLink.URL} 
+                      onChange={(e) => handleSocialLinkChange(e, index,'URL')} 
+                      placeholder="URL" 
+                    />
                   </div>
                 </div>
               ))}
             </div>
 
             <div className="text-center">
-                <button type="submit" className="button2 type2">Save Profile</button>
+                <button type="submit" onClick={handleSubmit} className="button type2">Save Profile</button>
             </div>
           </form>
+          <button onClick={handleCreateCV}>Create CV</button>
+          <button onClick={() => handleNavigateToCV(1)}>Go to CV 1</button>
+          <button onClick={() => handleNavigateToCV(2)}>Go to CV 2</button>
+          <button onClick={() => handleNavigateToCV(3)}>Go to CV 3</button>
         </div>
       </div>
     </div>
   );
 };
 
-export default MyResumes;
+export default CreateResume;
