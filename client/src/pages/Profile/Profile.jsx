@@ -188,12 +188,12 @@ const Profile = () => {
             <form className="row g-3 p-3">
               <div className="form col-md-6">
                 <label className="form-label">First Name</label>
-                <input type="text" placeholder="Tran" className="form-control" />
+                <input type="text" name="fullName" value={formData.fullName } onChange={handleChange} placeholder="Dev Ninja" className="form-control" />
               </div>
-              <div className="form col-md-6">
+              {/* <div className="form col-md-6">
                 <label className="form-label">Last Name</label>
                 <input type="text" placeholder="Dev Ninja" className="form-control" />
-              </div>
+              </div> */}
               <div className="form col-md-6">
                 <label className="form-label">Email</label>
                 <input
