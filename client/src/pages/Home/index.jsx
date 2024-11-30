@@ -7,35 +7,54 @@ const Home = () => {
   const [responseData, setResponseData] = useState(null);
   const navigate = useNavigate(); // Get the navigate function
 
-  const handleOnClick = () => {
-    axios.get('http://localhost:3001/getTestData')
-      .then(response => {
-        console.log(response.data);
-        setResponseData(response.data); // Save response data in the state
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  
+  const gotoCreate = () => {
+    navigate('/CreateResume'); // Navigate to /Create Resume
   }
 
-  const handleNavigateToMyResumes = () => {
-    navigate('/MyResumes'); // Navigate to /MyResumes route
+  const gotoLogin = () => {
+    navigate('/Login'); // Navigate to Login
   }
 
   return (
-    <div className='homeContainer'>
-      <button className='buttonTest' onClick={handleOnClick}>Get data</button>
-      <button className='buttonNavigate' onClick={handleNavigateToMyResumes}>Go to My Resumes</button> {/* New Navigation Button */}
+    
+     <div>
       
-      {/* Display data if available */}
-      {responseData && (
-        <div className='dataDisplay'>
-          <p>Name: {responseData.name}</p>
-          <p>Age: {responseData.age}</p>
-          <p>Job: {responseData.job}</p>
+      <nav className="navbar bg-body-tertiary shadow" id='nav-create'>
+        <div className="container">
+          <a className="navbar-brand" href="#">
+            <img src="/Pictures/logo.png" alt="Logo" height="24" className="d-inline-block align-text-top" />
+            <b>CV</b> <span>Online Builder</span>
+          </a>
+          <div className="btns">
+            <button className="btn btn-sm btn-dark" >
+              <i className=" bi bi-person-circle" /> FAQ
+            </button>
+            
+            <button type="button" onClick={gotoLogin} className="btn btn-sm btn-dark" >
+              <i className="bi bi-person-circle" /> Login  
+            </button>
+            <button type="button" onClick={gotoCreate} className="btn btn-sm btn-danger">
+              <i className="bi bi-person-circle" /> Make a CV
+            </button>
+          </div>
         </div>
-      )}
-    </div>
+      </nav>
+
+      <div class="hometext1">
+        <p> Create your CV with ease </p>
+      </div>
+
+      <div class="hometext2">
+        <p>Fast. Free. With guidelines</p>
+      </div>
+
+      </div>
+      
+    
+
+      
+
   );
 }
 

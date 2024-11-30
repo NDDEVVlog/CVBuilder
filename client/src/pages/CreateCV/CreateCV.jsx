@@ -11,17 +11,17 @@ const CreateCV = () => {
     email: '',
     mobileNo: '',
     dob: '',
-    gender: 'Male',
-    religion: 'Hindu',
-    country: 'Indian',
+    sex: '',
+    religion: '',
+    country: '',
     maritalStatus: 'Single',
     hobbies: '',
     languagesKnown: '',
     address: '',
-    experiences: [{ title: "", company: "", startDate: "", endDate: "", description: "" }],
+    experiences: [{ jobTitle: "", company: "", startDate: "", endDate: "", description: "" }],
     education: [{ degree: "", institution: "", year: "" }],
     skills: [{ name: "", level: "" }],
-    socialLink: [{ Platform: "", URL: "" }],
+    socialLink: [{ platform: "", url: "" }],
     avatar: null,
   });
 
@@ -45,11 +45,11 @@ const CreateCV = () => {
             dob: response.data.dob || '',
             country: response.data.country || '',
             mobileNo: response.data.phoneNumber || '',
-            gender: response.data.sex || '',
-            experiences: response.data.workExperience || [{ title: '', company: '', startDate: '', endDate: '', description: '' }],
-            education: response.data.education || [{ degree: '', institution: '', year: '' }],
-            skills: response.data.skills || [{ name: '', level: 0 }],
-            socialLink: response.data.socialLink || [{ platform: '', url: '' }],
+            sex: response.data.sex || '',
+            experiences: response.data.workExperience || [{ jobTitle: "", company: "", startDate: "", endDate: "", description: "" }],
+            education: response.data.education || [{ degree: "", institution: "", year: "" }],
+            skills: response.data.skills || [{ name: "", level: "" }],
+            socialLink: response.data.socialLinks || [{ platform: '', url: '' }],
             avatar: response.data.avatar || null,
           });
         } else {
@@ -63,78 +63,125 @@ const CreateCV = () => {
     fetchProfile();
   }, [id]);
 
+  const formatDate = (date) => {
+    if (!date) return "Not Provided"; // Handle empty or undefined dates
+    const d = new Date(date); // Convert to Date object
+    return d.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }); // Format as dd-mm-yyyy
+  };
+
+      // Helper function to get class name based on skill level
+    const getSkillLevelClass = (level) => {
+      switch (level) {
+        case "Expert":
+          return "expert";
+        case "Advanced":
+          return "advanced";
+        case "Intermediate":
+          return "intermediate";
+        default:
+          return "beginner";
+      }
+    };
+
   return (
     <div className="CreateCVContainer">
       {/* Header Section */}
       <header className="cv-header">
-        {formData.avatar && <img src={formData.avatar} alt="Profile Avatar" className="cv-avatar" />}
-        <h1 className="cv-fullname">{formData.fullName}</h1>
-        <p className="cv-contact">
-          {formData.email} | {formData.mobileNo}
-        </p>
-        <p className="cv-address">{formData.address}</p>
+        {formData.avatar && (
+          <img
+            src={URL.createObjectURL(formData.avatar)}
+            alt="Profile"
+            style={{ width: "100px", height: "100px", borderRadius: "50%" }}
+          />
+        )}
+        <h1>{formData.fullName || "Full Name"}</h1>
+        <p>{formData.email || "Email"}</p>
+        <p>{formData.mobileNo || "Phone Number"}</p>
+        <p>{formData.address || "Address"}</p>
       </header>
 
-      {/* Skills Section */}
-      <section className="cv-section">
-        <h2>Skills</h2>
-        <ul className="cv-skills">
-          {formData.skills.length > 0 ? (
-            formData.skills.map((skill, index) => (
-              <li key={index}>
-                {skill.name} - Level: {skill.level}
-              </li>
-            ))
-          ) : (
-            <li>No skills added yet.</li>
-          )}
-        </ul>
+      {/* Personal Details */}
+      <section className="cv-section personal-details">
+        <h2>Personal Details</h2>
+        <div className="personal-details-grid">
+          <div>
+            <p><strong>Date of Birth:</strong> {formatDate(formData.dob)}</p>
+            <p><strong>Sex:</strong> {formData.sex || "Not Provided"}</p>
+            <p><strong>Religion:</strong> {formData.religion || "Not Provided"}</p>
+          </div>
+          <div>
+            <p><strong>Country:</strong> {formData.country || "Not Provided"}</p>
+            <p><strong>Marital Status:</strong> {formData.maritalStatus}</p>
+            <p><strong>Languages Known:</strong> {formData.languagesKnown || "Not Provided"}</p>
+            <p><strong>Hobbies:</strong> {formData.hobbies || "Not Provided"}</p>
+          </div>
+        </div>
+        
       </section>
 
       {/* Experience Section */}
       <section className="cv-section">
         <h2>Experience</h2>
-        {formData.experiences.length > 0 ? (
-          formData.experiences.map((job, index) => (
-            <div key={index} className="cv-experience-item">
-              <h3>{job.title} at {job.company}</h3>
-              <p>{job.startDate} - {job.endDate}</p>
-              <p>{job.description}</p>
-            </div>
-          ))
-        ) : (
-          <p>No experience added yet.</p>
-        )}
+        {formData.experiences.map((experience, index) => (
+          <div className="cv-box" key={index}>
+            <h3>{experience.jobTitle || "Job Title"} at {experience.company || "Company Name"}</h3>
+            <p>{formatDate(experience.startDate)} - {formatDate(experience.endDate)}</p>
+            <p>{experience.description || "Job Description"}</p>
+          </div>
+        ))}
       </section>
 
       {/* Education Section */}
       <section className="cv-section">
         <h2>Education</h2>
-        {formData.education.length > 0 ? (
-          formData.education.map((edu, index) => (
-            <div key={index} className="cv-education-item">
-              <h3>{edu.degree}</h3>
-              <p>{edu.institution} - {edu.year}</p>
+        {formData.education.map((edu, index) => (
+          <div className="cv-box" key={index}>
+            <h3>{edu.degree || "Degree"}</h3>
+            <p>{edu.institution || "Institution"} | {edu.year || "Year"}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* Skills Section */}
+      <section className="cv-section skills-section">
+        <h2>Skills</h2>
+        <div className="skills-grid">
+          {formData.skills.map((skill, index) => (
+            <div key={index} className="skill-item">
+              <div className="skill-name">{skill.name || "Skill Name"}</div>
+              <div className="skill-bar">
+                <div
+                  className={`skill-level ${getSkillLevelClass(skill.level)}`}
+                  style={{
+                    width:
+                      skill.level === "Expert"
+                        ? "100%"
+                        : skill.level === "Advanced"
+                        ? "75%"
+                        : skill.level === "Intermediate"
+                        ? "50%"
+                        : "25%",
+                  }}
+                ></div>
+              </div>
             </div>
-          ))
-        ) : (
-          <p>No education added yet.</p>
-        )}
+          ))}
+        </div>
       </section>
 
       {/* Social Links Section */}
       <section className="cv-section">
         <h2>Social Links</h2>
-        <ul className="cv-social-links">
-          {formData.socialLink.length > 0 ? (
-            formData.socialLink.map((link, index) => (
-              <li key={index}>
-                <a href={link.URL} target="_blank" rel="noopener noreferrer">{link.Platform}</a>
-              </li>
-            ))
-          ) : (
-            <li>No social links added yet.</li>
-          )}
+        <ul>
+          {formData.socialLink.map((link, index) => (
+            <li key={index}>
+              <strong>{link.platform || "Platform"}:</strong> {link.url || "URL"}
+            </li>
+          ))}
         </ul>
       </section>
     </div>

@@ -19,17 +19,17 @@ const CreateResume = () => {
     email: '',
     mobileNo: '',
     dob: '',
-    gender: 'Male',
-    religion: 'Hindu',
-    country: 'Indian',
+    sex: '',
+    religion: '',
+    country: '',
     maritalStatus: 'Single',
     hobbies: '',
     languagesKnown: '',
     address: '',
-    experiences: [{ title: "", company: "", startDate: "", endDate: "",description:"" }],
+    experiences: [{ jobTitle: "", company: "", startDate: "", endDate: "",description:"" }],
     education: [{ degree: "", institution: "", year: "" }],
     skills: [{ name: "", level: "" }],
-    socialLink: [{ Platform: "", URL: "" }],
+    socialLink: [{ platform: "", url: "" }],
     avatar: null,
   });
 
@@ -55,11 +55,11 @@ const CreateResume = () => {
             dob: response.data.dob || '',
             country: response.data.country || '',
             mobileNo: response.data.phoneNumber || '',
-            gender: response.data.sex || '',
-            experiences: response.data.workExperience || [{ title: "", company: "", startDate: "", endDate: "" }],
+            sex: response.data.sex || '',
+            experiences: response.data.workExperience || [{ jobTitle: "", company: "", startDate: "", endDate: "",description:"" }],
             education: response.data.education || [{ degree: "", institution: "", year: "" }],
             skills: response.data.skills || [{ name: "", level: 0 }],
-            socialLink: response.data.socialLink || [{ platform: '', url: '' }],
+            socialLink: response.data.socialLinks || [{ platform: '', url: '' }],
             avatar: response.data.avatar || null,
           });
         } else {
@@ -75,7 +75,8 @@ const CreateResume = () => {
 
 
   console.log(user)
-  console.log(formData)
+  console.log("Data Here : ",formData);
+  console.log("Gender : ", formData.experiences);
 
   
 
@@ -85,17 +86,20 @@ const CreateResume = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
     }));
   };
 
   const handleAddExperience = () => {
-    setFormData({
-      ...formData,
-      experiences: [...formData.experiences, { title: '', company: '',location:' ' ,start: '', end: '', description: '' }],
-    });
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      experiences: [
+        ...prevFormData.experiences,
+        { jobTitle: "", company: "", startDate: "", endDate: "", description: "" },
+      ],
+    }));
   };
 
   const handleAddEducation = () => {
@@ -115,19 +119,21 @@ const CreateResume = () => {
 const handleAddSocialLink = () => {
   setFormData(prevData => ({
     ...prevData,
-    socialLink: [...prevData.socialLink, { Platform: "", URL: "" }]
+    socialLink: [...prevData.socialLink, { platform: "", url: "" }]
   }));
 };
 
 
-  const handleExperienceChange = (e, index) => {
-    const { name, value } = e.target;
-    const updatedExperiences = formData.experiences.map((exp, i) => (i === index ? { ...exp, [name]: value } : exp));
-    setFormData((prevData) => ({
-      ...prevData,
-      experiences: updatedExperiences,
-    }));
-  };
+const handleExperienceChange = (e, index) => {
+  const { name, value } = e.target;
+
+  
+  setFormData(prevFormData => {
+      const updatedExperiences = [...prevFormData.experiences];
+      updatedExperiences[index] = { ...updatedExperiences[index], [name]: value };
+      return { ...prevFormData, experiences: updatedExperiences };
+  });
+};
 
   const handleEducationChange = (e, index) => {
     const { name, value } = e.target;
@@ -157,19 +163,24 @@ const handleAddSocialLink = () => {
     }
   };
   const handleSocialLinkChange = (e, index, field) => {
-    const value = e.target.value;
-    setFormData(prevData => {
-      const updatedLinks = [...prevData.socialLink];
-      updatedLinks[index][field] = value;
-      return { ...prevData, socialLink: updatedLinks };
+    const { value } = e.target;
+  
+    setFormData(prevFormData => {
+      const updatedSocialLinks = [...prevFormData.socialLink];
+      updatedSocialLinks[index] = {
+        ...updatedSocialLinks[index],
+        [field]: value  // Dynamically update the field (platform or url)
+      };
+  
+      return { ...prevFormData, socialLink: updatedSocialLinks };
     });
   };
-
+  
   const handleRemoveExperience = (index) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      experiences: prevData.experiences.filter((_, i) => i !== index),
-    }));
+    setFormData((prevFormData) => {
+      const updatedExperiences = prevFormData.experiences.filter((_, i) => i !== index);
+      return { ...prevFormData, experiences: updatedExperiences };
+    });
   };
 
   const handleRemoveEducation = (index) => {
@@ -191,13 +202,23 @@ const handleAddSocialLink = () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   
+  console.log('Title : ',formData.experiences)
   const payload = {
     
-    userId: state.userId, // Ensure userId is included
-    ...formData,
-    phone: formData.mobileNo, // Match server's expected field names
-    socialLinks: formData.socialLink, // Correct the key name
+    userId: state.userId,
+            fullName: formData.fullName,
+            email: formData.email,
+            address: formData.address,
+            dob: formData.dob,
+            phone: formData.mobileNo,
+            gender: formData.sex,
+            skills: formData.skills,
+            education: formData.education,
+            workExperience: formData.experiences,
+            socialLinks: formData.socialLink,
   };
+
+  console.log("Payload :", payload)
   
   try {
     const response = await axios.post('http://localhost:3001/profile/updateProfile', payload);
@@ -316,13 +337,19 @@ const handleRemoveSocialLink = (index) => {
             </div>
 
             <div className="col-md-6">
-              <label className="form-label">Gender</label>
-              <select className="form-select" name="gender" value={formData.gender} onChange={handleInputChange}>
-                <option value='Male'>Male</option>
-                <option value='Female'>Female</option>
-                <option value='Other'>Other</option>
+            <label className="form-label">Gender</label>
+            <select
+              className="form-select"
+              name="sex"
+              value={formData.sex}
+              onChange={handleInputChange}
+            >
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Others">Others</option>
               </select>
             </div>
+
 
             <div className="col-md-6">
               <label className="form-label">Religion</label>
@@ -385,22 +412,61 @@ const handleRemoveSocialLink = (index) => {
                 <div className="col-12 col-md-6 p-2" key={index}>
                   <div className="exp p-2 border rounded">
                     <div className="d-flex justify-content-between">
-                      <h6>{exp.title || exp.company || 'Company Name'}</h6> {/* Hiển thị title hoặc company */}
+                      <h6>{exp.jobTitle || 'Company Name'}</h6>
                       <button type="button" onClick={() => handleRemoveExperience(index)} className="btn btn-link p-0">
                         <i className="bi bi-x-lg small"></i>
                       </button>
                     </div>
-                    <input type="text" className="form-control mt-1" name="title" value={exp.title} onChange={(e) => handleExperienceChange(e, index)} placeholder="Company Name" />
-                    <input type="text" className="form-control mt-1" name="company" value={exp.company} onChange={(e) => handleExperienceChange(e, index)} placeholder="Location" />
+                    <input
+                      type="text"
+                      className="form-control mt-1"
+                      name="jobTitle"
+                      value={exp.jobTitle}
+                      onChange={(e) => handleExperienceChange(e, index)}
+                      placeholder="Title"
+                    />
+                    <input
+                      type="text"
+                      className="form-control mt-1"
+                      name="company"
+                      value={exp.company}
+                      onChange={(e) => handleExperienceChange(e, index)}
+                      placeholder="Company"
+                    />
                     <div className="d-flex justify-content-between mt-1">
-                      <input type="date" className="form-control me-1" name="start" value={exp.startDate} onChange={(e) => handleExperienceChange(e, index)} placeholder="Start Date" />
-                      <input type="date" className="form-control" name="end" value={exp.end} onChange={(e) => handleExperienceChange(e, index)} placeholder="End Date" />
+                      <input
+                        type="date"
+                        className="form-control me-1"
+                        name="startDate"
+                        value={exp.startDate}
+                        onChange={(e) => handleExperienceChange(e, index)}
+                        placeholder="Start Date"
+                      />
+                      <input
+                        type="date"
+                        className="form-control"
+                        name="endDate"
+                        value={exp.endDate}
+                        onChange={(e) => handleExperienceChange(e, index)}
+                        placeholder="End Date"
+                      />
                     </div>
-                    <textarea className="form-control mt-1" name="description" value={exp.description} onChange={(e) => handleExperienceChange(e, index)} rows="3" placeholder="Job Description"></textarea>
+                    <textarea
+                      className="form-control mt-1"
+                      name="description"
+                      value={exp.description}
+                      onChange={(e) => handleExperienceChange(e, index)}
+                      rows="3"
+                      placeholder="Job Description"
+                    ></textarea>
                   </div>
                 </div>
               ))}
+              {/* <button type="button" onClick={handleAddExperience} className="btn btn-primary mt-3">
+                Add Experience
+              </button> */}
             </div>
+
 
             <hr />
             <div className="d-flex justify-content-between">
@@ -488,7 +554,7 @@ const handleRemoveSocialLink = (index) => {
                 <div className="col-12 col-md-6 p-2" key={index}>
                   <div className="exp p-2 border rounded">
                     <div className="d-flex justify-content-between align-items-center">
-                      <h6><i className="bi bi-caret-right"></i> {socialLink.Platform || 'Your Link'}</h6>
+                      <h6><i className="bi bi-caret-right"></i> {socialLink.platform || 'Your Link'}</h6>
                       <button type="button" onClick={() => handleRemoveSocialLink(index)} className="btn btn-link p-0">
                         <i className="bi bi-x-lg small"></i>
                       </button>
@@ -496,15 +562,17 @@ const handleRemoveSocialLink = (index) => {
                     <input 
                       type="text" 
                       className="form-control mt-1" 
-                      value={socialLink.Platform} 
-                      onChange={(e) => handleSocialLinkChange(e, index,'Platform')} 
+                      name="platform"  // This should match the property in formData
+                      value={socialLink.platform} 
+                      onChange={(e) => handleSocialLinkChange(e, index,'platform')} 
                       placeholder="Platform" 
                     />
                     <input 
                       type="text" 
                       className="form-control mt-1" 
-                      value={socialLink.URL} 
-                      onChange={(e) => handleSocialLinkChange(e, index,'URL')} 
+                      name="url"  // This should match the property in formData
+                      value={socialLink.url} 
+                      onChange={(e) => handleSocialLinkChange(e, index,'url')} 
                       placeholder="URL" 
                     />
                   </div>

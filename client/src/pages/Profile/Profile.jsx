@@ -13,12 +13,25 @@ const Profile = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
-    address: '',
+    mobileNo: '',
     dob: '',
-    country: '',
-    phone: '',
     sex: '',
+    religion: '',
+    country: '',
+    maritalStatus: 'Single',
+    hobbies: '',
+    languagesKnown: '',
+    address: '',
+    experiences: [{ jobTitle: "", company: "", startDate: "", endDate: "",description:"" }],
+    education: [{ degree: "", institution: "", year: "" }],
+    skills: [{ name: "", level: "" }],
+    socialLink: [{ platform: "", url: "" }],
+    avatar: null,
   });
+
+
+
+  
   // const id = state.userid
   // console.log(state)
 
@@ -219,7 +232,7 @@ const Profile = () => {
               </div>
               <div className="form col-12">
                 <label className="form-label">Home Address</label>
-                <input type="text" placeholder="766 Võ Văn Kiệt, Phường 1, Quận 5, Hồ Chí Minh" className="form-control" />
+                <input type="text"  name = "address" value = {formData.address} onChange={handleChange} placeholder="766 Võ Văn Kiệt, Phường 1, Quận 5, Hồ Chí Minh" className="form-control" />
               </div>
               <div className="form col-md-6">
                 <label className="form-label">Country</label>
@@ -248,7 +261,7 @@ const Profile = () => {
               <div className="form col-md-6">
                 <label className="form-label">Sex</label>
 
-                <select name="sex" id="sex" onChange={handleChange}>
+                <select name="sex" id="sex" value={formData.sex} onChange={handleChange}>
                
                     <option value="">-------- Choose your sex --------</option>
                     <option value="Male">Male</option>

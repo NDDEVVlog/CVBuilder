@@ -27,9 +27,6 @@ const workExperienceSchema = new mongoose.Schema({
         type: String,
 
     },
-    location: {
-        type: String // Location of the company
-    },
     startDate: {
         type: Date,
     },
