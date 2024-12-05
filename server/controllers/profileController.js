@@ -7,11 +7,16 @@ export const create = async (req, res) => {
         const {
             userId,
             fullName,
+            dob,
+            religion,
+            nationality,
+            phone,
+            martialStatus,
             email,
             address,
-            dob,
-            phone,
             sex,
+            languagesKnown,
+            hobbies,
             skills = [],
             education = [],
             workExperience = [],
@@ -36,15 +41,20 @@ export const create = async (req, res) => {
         const newProfile = new Profile({
             user: userId,
             fullname: fullName.trim(),
+            dob,
+            religion,
+            nationality,
+            phone,
+            martialStatus,
             email,
             address,
-            dob,
-            phoneNumber: phone,
             sex,
+            languagesKnown,
+            hobbies,
             skills,
-            education,
+            education ,
             workExperience,
-            socialLinks,
+            socialLinks ,
         });
 
         const savedProfile = await newProfile.save();
@@ -85,7 +95,7 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
     console.log('Incoming update data:', req.body);
     try {
-        const { userId, fullName, email, address, dob, phone, gender, skills, education, workExperience, socialLinks } = req.body;
+        const { userId, fullName, email, address, dob,religion, nationality,languagesKnown,martialStatus,hobbies , phone, gender, skills, education, workExperience, socialLinks } = req.body;
 
         console.log('Incoming update data:', req.body);
 
@@ -110,7 +120,11 @@ export const updateProfile = async (req, res) => {
         if (education) profile.education = education;
         if (workExperience) profile.workExperience = workExperience;
         if (socialLinks) profile.socialLinks = socialLinks;
-
+        if (hobbies) profile.hobbies = hobbies;
+        if (religion) profile.religion = religion;
+        if (nationality) profile.nationality = nationality;
+        if ( languagesKnown) profile.languagesKnown= languagesKnown;
+        if (martialStatus) profile.maritalStatus = martialStatus;
         // Save the updated profile
         const updatedProfile = await profile.save();
 

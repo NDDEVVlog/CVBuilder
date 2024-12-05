@@ -1,159 +1,231 @@
-/* Page Layout */
+/* General Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f5;
+  color: #333;
+}
+
 .CV2Container {
-    display: flex;
-    flex-direction: row;
-    max-width: 21cm; /* A4 page width */
-    min-height: 29.7cm; /* A4 page height */
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    font-family: Arial, sans-serif;
-    color: #333;
-  }
-  
-  /* Left Column (Personal Info & Avatar) */
-  .cv-left-column {
-    width: 40%;
-    background-color: #4caf50; /* Green Background */
-    color: #fff; /* White Text */
-    padding: 30px;
-    display: flex;
+  display: flex;
+  flex-direction: row;
+  max-width: 21cm; /* A4 page width */
+  min-height: 29.7cm; /* A4 page height */
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+/* Left Column */
+.cv-left-column {
+  width: 40%;
+  background-color: #4caf50; /* Green Background */
+  color: #fff; /* White Text */
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px 0 0 10px;
+  box-sizing: border-box;
+}
+
+.cv-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.cv-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 3px solid #fff;
+}
+
+.cv-fullname {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.cv-email, 
+.cv-phone {
+  font-size: 16px;
+  color: #e0e0e0;
+  margin: 5px 0;
+}
+
+.cv-section h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: #fff;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+  padding-bottom: 5px;
+}
+
+.cv-section p,
+.cv-section ul li {
+  font-size: 16px;
+  color: #e0e0e0;
+  margin: 5px 0;
+}
+
+.cv-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.cv-section ul li {
+  margin: 5px 0;
+}
+
+/* Right Column */
+.cv-right-column {
+  width: 60%;
+  padding: 30px;
+  background-color: #f4f6f9;
+  border-radius: 0 10px 10px 0;
+  box-sizing: border-box;
+}
+
+.cv-box {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cv-box h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #4caf50;
+}
+
+.cv-box p {
+  font-size: 16px;
+  color: #333;
+}
+
+.experience-section h2 {
+  color: #333; /* Color of the section title */
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.education-section h2{
+  color: #333; /* Color of the section title */
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Skills Section */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.skill-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.skill-item:hover {
+  transform: scale(1.05);
+}
+
+.skill-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.skill-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-bar::after {
+  content: '';
+  display: block;
+  height: 100%;
+  border-radius: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(90deg, #4caf50, #81c784);
+  transition: width 0.3s ease-in-out;
+}
+
+/* Skill Bar Level Classes */
+.expert .skill-bar::after {
+  width: 100%;
+  background: linear-gradient(90deg, #4caf50, #0400ff); /* Green */
+}
+
+.advanced .skill-bar::after {
+  width: 75%;
+  background: linear-gradient(90deg, #2196f3, #64b5f6); /* Blue */
+}
+
+.intermediate .skill-bar::after {
+  width: 50%;
+  background: linear-gradient(90deg, #ff9800, #ffcc80); /* Orange */
+}
+
+.beginner .skill-bar::after {
+  width: 25%;
+  background: linear-gradient(90deg, #f44336, #e57373); /* Red */
+}
+
+/* Buttons */
+.download-btn {
+  background-color: #4caf50;
+  color: white;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.2s ease-in-out;
+  display: block;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.download-btn:hover {
+  background-color: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .CV2Container {
     flex-direction: column;
-    align-items: center;
-    border-radius: 8px;
-    margin-right: 10px;
+    max-width: 100%;
   }
-  
-  .cv-header {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  
-  .cv-avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-  }
-  
-  .cv-fullname {
-    font-size: 28px;
-    font-weight: 600;
-    margin: 10px 0;
-    color: #fff; /* White for Name */
-  }
-  
-  .cv-email, .cv-phone {
-    font-size: 16px;
-    color: #e0e0e0; /* Lighter gray for email/phone */
-  }
-  
-  .cv-section h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
-    text-align: left;
-    font-weight: bold;
-    color: #fff; /* White for section headings */
-  }
-  
-  .cv-section div, .cv-section ul li {
-    font-size: 16px;
-    color: #e0e0e0; /* Light gray for content */
-  }
-  
-  /* Right Column (Experience, Education, Skills) */
+
+  .cv-left-column, 
   .cv-right-column {
-    width: 60%;
-    padding: 30px;
-    background-color: #f4f6f9; /* Light Gray Background */
-    border-radius: 8px;
+    width: 100%;
+    border-radius: 10px;
   }
-  
-  .cv-box {
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  .download-btn {
+    margin: 10px auto;
   }
-  
-  .cv-box h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-    color: #4caf50; /* Green color for job title */
-  }
-  
-  .cv-box p {
-    font-size: 16px;
-    color: #333; /* Dark gray for text content */
-  }
-  
-  /* Skills Section */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-  }
-  
-  .skill-item {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .skill-name {
-    font-size: 18px;
-    font-weight: bold;
-    color: #1a5b58; /* Dark teal for skill name */
-  }
-  
-  .skill-bar {
-    background-color: #e0e0e0;
-    height: 10px;
-    border-radius: 5px;
-    margin-top: 10px;
-  }
-  
-  .skill-level {
-    height: 100%;
-    border-radius: 5px;
-    transition: width 0.3s ease;
-  }
-  
-  .expert {
-    background-color: #4caf50; /* Green for Expert */
-  }
-  
-  .advanced {
-    background-color: #ff9800; /* Orange for Advanced */
-  }
-  
-  .intermediate {
-    background-color: #ff5722; /* Red for Intermediate */
-  }
-  
-  .beginner {
-    background-color: #e0e0e0; /* Light Gray for Beginner */
-  }
-  
-  /* Specific label color styles */
-.cv-section p strong {
-    color: #333; /* Default color for all labels */
-  }
-  
-  /* Specific label colors */
-  .cv-section p strong:nth-of-type(1) {
-    color: #9500ff; /* Green for Date of Birth */
-  }
-  
-  .cv-section p strong:nth-of-type(2) {
-    color: #2196f3; /* Blue for Sex */
-  }
-  
-  .cv-section p strong:nth-of-type(3) {
-    color: #ff9800; /* Orange for Religion */
-  }
-  
-  .cv-section p strong:nth-of-type(4) {
-    color: #f44336; /* Red for Country */
-  }
-  
+}

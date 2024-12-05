@@ -116,6 +116,9 @@ const profileSchema = new mongoose.Schema({
     languagesKnown: {
         type:String,
     },
+    hobbies:{
+        type:String,
+    },
     skills: [skillSchema],
     education: [educationSchema], // Embedding education schema
     workExperience: [workExperienceSchema], // Embedding work experience schema

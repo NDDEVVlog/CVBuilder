@@ -115,7 +115,7 @@ const Profile = () => {
       email: formData.email,
       address: formData.address,
       dob: formData.dob,
-      country: formData.country,
+      country: formData.nationality,
       phone: formData.phone,
       sex: formData.sex,
     };

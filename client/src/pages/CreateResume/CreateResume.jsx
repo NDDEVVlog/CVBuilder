@@ -53,9 +53,13 @@ const CreateResume = () => {
             email: response.data.email || '',
             address: response.data.address || '',
             dob: response.data.dob || '',
-            country: response.data.country || '',
+            country: response.data.nationality || '',
             mobileNo: response.data.phoneNumber || '',
+            religion: response.data.religion || 'None',
+            maritalStatus: response.data.maritalStatus || 'Single',
+            languagesKnown : response.data.languagesKnown ||'',
             sex: response.data.sex || '',
+            hobbies : response.data.hobbies || '',
             experiences: response.data.workExperience || [{ jobTitle: "", company: "", startDate: "", endDate: "",description:"" }],
             education: response.data.education || [{ degree: "", institution: "", year: "" }],
             skills: response.data.skills || [{ name: "", level: 0 }],
@@ -76,7 +80,7 @@ const CreateResume = () => {
 
   console.log(user)
   console.log("Data Here : ",formData);
-  console.log("Gender : ", formData.experiences);
+  console.log("Gender : ", formData.hobbies);
 
   
 
@@ -211,11 +215,19 @@ const handleSubmit = async (e) => {
             address: formData.address,
             dob: formData.dob,
             phone: formData.mobileNo,
+            religion: formData.religion,
+            nationality: formData.country,
+            maritalStatus: formData.maritalStatus,
+            languagesKnown: formData.languagesKnown,
             gender: formData.sex,
+            hobbies : formData.hobbies,
             skills: formData.skills,
             education: formData.education,
             workExperience: formData.experiences,
             socialLinks: formData.socialLink,
+
+   
+
   };
 
   console.log("Payload :", payload)
@@ -287,7 +299,7 @@ const handleRemoveSocialLink = (index) => {
       </nav>
 
       <div className="container">
-        <div className="bg-white rounded shadow p-2 mt-4" style={{ minHeight: '80vh' }}>
+        <div className="bg-white rounded shadow p-2 mt-4" style={{ minHeight: '600vh' }}>
           <div className="d-flex justify-content-between border-bottom">
             <h5>Create Resume</h5>
             <div>
@@ -386,7 +398,7 @@ const handleRemoveSocialLink = (index) => {
 
             <div className="col-md-6">
               <label className="form-label">Hobbies</label>
-              <input type="text" name="hobbies" value={formData.hobbies} onChange={handleInputChange} placeholder="Reading Books, Watching Movies" className="form-control" />
+              <input type="text" name="hobbies" value={formData.hobbies||''} onChange={handleInputChange} placeholder="Reading Books, Watching Movies" className="form-control" />
             </div>
 
             <div className="col-md-6">
