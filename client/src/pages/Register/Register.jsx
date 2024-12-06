@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Register.css'; // Assuming the CSS is in the same folder
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Register = () => {
     const [firstName, setFirstName] = useState('');
@@ -14,16 +15,15 @@ const Register = () => {
     const [success, setSuccess] = useState('');
     const [message, setMessage] = useState('');
 
+    // Initialize navigate
+    const navigate = useNavigate();
+
     // Validate form data
     const validateForm = () => {
-      if (firstName.trim() === '' || lastName.trim() === '' || password.trim() === ''|| email.trim()==='') {
+      if (firstName.trim() === '' || lastName.trim() === '' || password.trim() === '' || email.trim() === '') {
           setError('Please fill in all fields.');
           return false;
       }
-      //if (!/\S+@\S+\.\S+/.test(email)) {
-      //    setError('Email is not valid.');
-      //    return false;
-      //}
       if (password.length < 6) {
           setError('Password must be at least 6 characters long.');
           return false;
@@ -38,7 +38,6 @@ const Register = () => {
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent default form submission
-        console.log("Before Validation");
         setError('');
         setSuccess('Đăng ký thành công!');
         if (validateForm()) {
@@ -48,12 +47,13 @@ const Register = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ firstName, lastName, password,email }),
+                    body: JSON.stringify({ firstName, lastName, password, email }),
                 });
 
                 const data = await response.json();
                 if (response.ok) {
                     setMessage('Registration successful!');
+                    navigate('/Login'); // Navigate to Login page
                 } else {
                     console.error('Registration failed:', data);
                     setMessage(data.message || 'Registration failed!');

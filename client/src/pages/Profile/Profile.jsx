@@ -177,14 +177,7 @@ const Profile = () => {
             <img src="/Pictures/logo.png" alt="Logo" height={24} className="d-inline-block align-text-top" />
             <b> CV</b><span>Online Builder</span>
           </a>
-          <div className="btns">
-            <button className="btn btn-sm btn-dark" >
-              <i className="bi bi-person-circle" /> My Profile
-            </button>
-            <button className="btn btn-sm btn-danger">
-              <i className="bi bi-box-arrow-left" /> Logout
-            </button>
-          </div>
+
         </div>
       </nav>
       <div className="container">

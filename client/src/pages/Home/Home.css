@@ -187,3 +187,22 @@ a {
     text-align: center;
     color: rgb(9, 255, 0) !important;
 }
+
+/* Image container styling */
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1000px;  /* Increase the height of the image container */
+    width: 100%;
+    margin-top: 00px;  /* Space below the navbar */
+    position: relative;
+  }
+  
+  /* Slider image styling */
+  .slider-image {
+    width: 70%;  /* Set width to 100% to cover full width */
+    height: 70%;  /* Set height to 100% of the container */
+    object-fit: cover;  /* Ensures the image covers the container area without distortion */
+    transition: opacity 2s ease-in-out;
+  }

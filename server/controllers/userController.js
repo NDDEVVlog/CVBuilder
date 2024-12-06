@@ -16,7 +16,7 @@ export const getUser = async (req,res) => {
 
 // Hàm đăng ký người dùng
 export const registerUser = async (req, res) => {   
-    console.log("Register");
+    console.log(req.body);
     const { password, firstName, lastName,email } = req.body;
 
     // Kiểm tra nếu username, password, firstName hoặc lastName không có trong yêu cầu
@@ -38,7 +38,7 @@ export const registerUser = async (req, res) => {
             lastName,
             email
         });
-
+        
         // Lưu user vào MongoDB
         await newUser.save();
 

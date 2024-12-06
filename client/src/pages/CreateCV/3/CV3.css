@@ -1,0 +1,60 @@
+.CV3Container {
+    font-family: Arial, sans-serif;
+    margin: 20px auto;
+    max-width: 800px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #ffffff;
+    line-height: 1.6;
+    font-size: 14px;
+    text-align: center; /* Center content horizontally */
+    
+  }
+  
+  .cv-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+  }
+  
+  .avatar img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .personal-info h1 {
+    font-size: 1.5em;
+    margin: 0;
+    color: #333;
+  }
+  
+  .cv-section h2 {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    color: #444;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 2px;
+  }
+  
+  .download-btn {
+    display: block;
+    margin: 10px auto;
+    padding: 8px 16px;
+    font-size: 0.9em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .download-btn:hover {
+    background-color: #0056b3;
+  }
+  

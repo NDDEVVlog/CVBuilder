@@ -28,7 +28,7 @@
   font-size: 24px;
   font-weight: bold;
   margin: 5px 0;
-  color: #333;
+  color: #000000;
 }
 
 .cv-contact,
@@ -39,13 +39,74 @@
 }
 
 /* Section Headings */
+/* Experience Section Styling */
 .cv-section h2 {
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 15px;
   padding-bottom: 5px;
-  color: #007BFF; /* A bright blue for headings */
-  border-bottom: 2px solid #007BFF;
+  color: #FF5722; /* Orange color for the word Experience */
+  border-bottom: 2px solid #FF5722; /* Optional: matching border color */
+}
+
+#experience-section h2 {
+  color: #FF5722;
+  font-size: 22px;
+  font-weight: bold;
+  border-bottom: 2px solid #FF5722;
+}
+
+#education-section h2 {
+  color: #FF5722;
+  font-size: 22px;
+  font-weight: bold;
+  border-bottom: 2px solid #FF5722;
+}
+.cv-section.personal-details h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  color: #FF5722;
+  border-bottom: 2px solid #FF5722;
+}
+
+
+/* Social Links Section */
+.cv-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.cv-section ul li {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+#skills-section h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  color: #FF5722; /* Use a vibrant orange color */
+  border-bottom: 2px solid #FF5722; /* Match the color for consistency */
+}
+.cv-section ul li strong {
+  color: #007BFF; /* Platform name color (bright blue) */
+}
+
+.cv-section ul li span {
+  color: #555; /* URL color (light gray) */
+  font-style: italic; /* Optional: to emphasize the URL */
+}
+
+/* Optional: Style URLs as clickable links */
+.cv-section ul li a {
+  color: #007BFF; /* Blue color for links */
+  text-decoration: none;
+}
+
+.cv-section ul li a:hover {
+  text-decoration: underline; /* Underline on hover */
 }
 
 /* Personal Details Section */
@@ -76,17 +137,15 @@
 .personal-details-grid p {
   font-size: 14px;
   margin: 5px 0;
-  color: #555;  /* Slightly lighter color for the text */
+  color: #000; /* Label text color */
+}
+.personal-details-grid p strong {
+  color: #007BFF; /* Label color */
 }
 
-.personal-details-grid strong {
-  color: #007BFF; /* Color for the labels */
-}
 
-.personal-details p {
-  font-size: 14px;
-  margin-top: 10px;
-  color: #555;
+.personal-details-grid p span {
+  color: #555; /* Information color (lighter shade) */
 }
 
 .personal-details p strong {
@@ -131,6 +190,27 @@
   background-color: #007BFF; /* Blue level bar */
   transition: width 0.3s ease-in-out;
 }
+
+.skill-level.expert {
+  background-color: green;
+}
+.skill-level.advanced {
+  background-color: blue;
+}
+.skill-level.intermediate {
+  background-color: orange;
+}
+.skill-level.beginner {
+  background-color: red;
+}
+.skill-bar {
+  height: 10px;
+  background-color: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+
 
 /* Experience and Education Sections */
 .cv-box {

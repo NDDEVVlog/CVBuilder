@@ -596,10 +596,12 @@ const handleRemoveSocialLink = (index) => {
                 <button type="submit" onClick={handleSubmit} className="button type2">Save Profile</button>
             </div>
           </form>
-          <button onClick={handleCreateCV}>Create CV</button>
-          <button onClick={() => handleNavigateToCV(1)}>Go to CV 1</button>
-          <button onClick={() => handleNavigateToCV(2)}>Go to CV 2</button>
-          <button onClick={() => handleNavigateToCV(3)}>Go to CV 3</button>
+          <div class="button-container">
+          <button class="button" onClick={handleCreateCV}>Create CV</button>
+          <button class="button" onClick={() => handleNavigateToCV(1)}>Go to CV 1</button>
+          <button class="button" onClick={() => handleNavigateToCV(2)}>Go to CV 2</button>
+          <button class="button" onClick={() => handleNavigateToCV(3)}>Go to CV 3</button>
+        </div>
         </div>
       </div>
     </div>
